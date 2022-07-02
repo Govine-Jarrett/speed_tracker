@@ -1,2 +1,2 @@
-# speed_tracker
- Check the speed of your internet connection and notify you via email when the speed reaches below the pre-define speed limit.  
+# Speed Tracker v0.1.0
+ Check your network speed and notify you via email if the network upload and download speeds are below the predefined speeds in the 'speedTrackerSetting.ini' file.  
