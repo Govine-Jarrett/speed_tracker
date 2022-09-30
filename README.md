@@ -1,7 +1,7 @@
 <body>
 <h1>WELCOME TO SPEED TRACKER V0.1.2</h1>
 
-<img src="res/image/Speed_Tracker_Logo.png">
+<img src="res/image/Speed_Tracker_logo.png">
 
 <h1>Speed Tracker Dashboard</h1>
 
