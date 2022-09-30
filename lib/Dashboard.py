@@ -102,7 +102,7 @@ class DashboardApp:
         self.SettingsLabelframe.pack(side="top")
         self.SendersEmailLabelframe = tk.LabelFrame(self.FormFrame)
         self.SenderEmailLabel = tk.Label(self.SendersEmailLabelframe)
-        self.SenderEmailLabel.configure(font="{Microsoft} 11 {}", text="Gmail:")
+        self.SenderEmailLabel.configure(font="{Microsoft} 11 {}", text="Email:")
         self.SenderEmailLabel.place(anchor="nw", relx=0.05, rely=0.06, x=0, y=0)
         self.SenderEmailEntry = tk.Entry(self.SendersEmailLabelframe)
         self.SenderEmailEntry.configure(
