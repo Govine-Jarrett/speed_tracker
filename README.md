@@ -27,6 +27,6 @@ I asked my self why not create a python script to automate it?
 
 The plan was to use a <a href="https://en.wikipedia.org/wiki/Raspberry_Pi#:~:text=The%20Raspberry%20Pi%204%20Model,HDMI%20(HDMI%20Type%20D)%20ports">Raspberry Pi</a> which would be connected to the modem via ethernet.
 Then I would create a schedule for the script, which would run in the background every hour tracking the
-internet speed, then email if the upload and download speed is be low a pre-define limits.</p>
+internet speed, then send me an email if the upload and download speed is below a pre-define limits.</p>
 
 </body>
