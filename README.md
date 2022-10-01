@@ -3,6 +3,9 @@
 
 <img src="res/image/Speed_Tracker_logo.png">
 
+<h1>Supported Email Provider</h1>
+<il>gmail.com</il>
+
 <h1>Dashboard</h1>
 
 <img src="res/image/Speed_Tracker_Screenshot.png">
