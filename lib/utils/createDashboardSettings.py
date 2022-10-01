@@ -4,11 +4,10 @@
 # SETTINGS: email , minDownloadSpeed, minUploadSpeed
 # 7/2/2022
 from os import path
-import configparser
-import logging
+from configparser import ConfigParser
+# import logging
 
-config_file_path = 'setting/speedTracker.ini'
-log_file_path = 'logs/createSettings.log'
+config_file_path = './res/config/dashboard.ini'
 
 def settings_exists() -> bool:
     """ Check if the Speed Tracker settings file exists.
@@ -21,34 +20,35 @@ def settings_exists() -> bool:
 
 
 def create_settings() -> None:
-    """Create the app settings file.
-    NOTE:
-    Both speeds are in mega bites
+    """
+    Create the app settings file.
     """
     
-    config = configparser.ConfigParser()
+    config = ConfigParser()
     
     # Create section and settings
+    # Both speeds are in MB
     config['DEFAULT'] = {
-        'receiverEmail': 'example@domin.com',
-        'emailProvider': '@gmail.com',
-        'minDownloadSpeed': '150',
         'minUploadSpeed': '150',
-        'modemLocation': 'Home Office'
+        'minDownloadSpeed': '150',
+        'recipientEmail': 'example@domin.com',
+        'modemLocation': 'Home Office',
+        'senderEmail':'speed.tracker@gmail.com',
+        'password':'Password123'
     }
-    
+
     # Create and write settings to file
     with open(config_file_path, 'w') as config_file_data:
         config.write(config_file_data)
     
-    # Log this event.
-    logging.basicConfig(format='%(message)s %(asctime)s', filename=log_file_path)
-    logging.warning('Created on: ')
+    # # Log this event.
+    # logging.basicConfig(format='%(message)s %(asctime)s', filename=log_file_path)
+    # logging.warning('Created on: ')
     
 
 
-if settings_exists():
-    print('file exists.')
-else:
-    create_settings()
-    print('file created')
+# if settings_exists():
+#     print('file exists.')
+# else:
+#     create_settings()
+#     print('file created')

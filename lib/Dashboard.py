@@ -1,16 +1,19 @@
 #!/usr/bin/python3
 import tkinter as tk
 from tkinter import messagebox, BooleanVar
+from utils.readDashboardSettings import ReadDashboardSettings
+
 
 # TODO:
-# -[] Check if the 'Dashboard.ini' exist in config folder
-# -[] Read in data dynamically from the config file
+# -[x] Check if the 'Dashboard.ini' exist in config folder
+# -[x] Read in data dynamically from the config file
     # and inset into entry widget
+# -[] Allow the user to edit and save the data 
 
 
 class DashboardApp:
+    dashboard_settings = ReadDashboardSettings()
     def __init__(self, master=None):
-
         self.DashboardToplevel = tk.Tk() if master is None else tk.Toplevel(master)
         
         # Getting image path for the app banner and icon
@@ -131,7 +134,7 @@ class DashboardApp:
         )
  
         # Reading data from config
-        _upload_ = "100"
+        _upload_ = DashboardApp.dashboard_settings.get_upload()
         self.UploadSpeedEntry["state"] = "normal"
         self.UploadSpeedEntry.delete("0", "end")
         self.UploadSpeedEntry.insert("0", _upload_)
@@ -147,7 +150,7 @@ class DashboardApp:
             font="{@Microsoft YaHei UI} 10 {}", state="disabled"
         )
         # Reading data from config
-        _download_ = "100"
+        _download_ = DashboardApp.dashboard_settings.get_download()
         self.DownloadSpeedEntry["state"] = "normal"
         self.DownloadSpeedEntry.delete("0", "end")
         self.DownloadSpeedEntry.insert("0", _download_)
@@ -170,7 +173,7 @@ class DashboardApp:
             font="{@Microsoft YaHei UI} 10 {}", state="disabled"
         )
         # Reading data from config
-        _recipient_ = "youremail@example.com"
+        _recipient_ = DashboardApp.dashboard_settings.get_recipient_email()
         self.RecipientEmailEntry["state"] = "normal"
         self.RecipientEmailEntry.delete("0", "end")
         self.RecipientEmailEntry.insert("0", _recipient_)
@@ -187,7 +190,7 @@ class DashboardApp:
         )
         
         # Reading data from config
-        _location_ = "Office"
+        _location_ = DashboardApp.dashboard_settings.get_modem_loc()
         self.ModemLocationEntry["state"] = "normal"
         self.ModemLocationEntry.delete("0", "end")
         self.ModemLocationEntry.insert("0", _location_)
@@ -217,7 +220,7 @@ class DashboardApp:
             font="{@Microsoft YaHei UI} 10 {}", state="disabled"
         )
         # Reading data from config
-        _sender_ = "speedtracker@gmail.com"
+        _sender_ = DashboardApp.dashboard_settings.get_sender_email()
         self.SenderEmailEntry["state"] = "normal"
         self.SenderEmailEntry.delete("0", "end")
         self.SenderEmailEntry.insert("0", _sender_)
@@ -229,7 +232,7 @@ class DashboardApp:
             font="{@Microsoft YaHei UI} 10 {}", show="*", state="disabled"
         )
         # Reading data from config
-        _password_ = "Password123"
+        _password_ = DashboardApp.dashboard_settings.get_password()
         self.SenderPasswordEntry["state"] = "normal"
         self.SenderPasswordEntry.delete("0", "end")
         self.SenderPasswordEntry.insert("0", _password_)

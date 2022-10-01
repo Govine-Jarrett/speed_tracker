@@ -3,12 +3,15 @@ from configparser import ConfigParser
 import logging
 from checkSettings import config_file_path
 
-log_file_path = 'logs/emailChecker.log'
+log_file_path = 'emailChecker.log'
 app_settings = ConfigParser()
 app_settings.read(config_file_path)
 
 email_provider = app_settings['DEFAULT']['emailProvider']
 
+
+# TODO:
+# -[] Update to not take the provider arg
 
 def email_is_valid(email_to: str, provider: str = email_provider )-> bool:
     """Check if the email address is valid base on the given provider or default.

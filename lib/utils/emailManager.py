@@ -5,24 +5,29 @@ from configparser import ConfigParser
 from email.message import EmailMessage
 from os import environ
 from smtplib import SMTP_SSL
+from readDashboardSettings import ReadDashboardSettings
 
-config_file_path = 'setting/speedTracker.ini'
-log_file_path = 'logs/'
 
-app_settings = ConfigParser()
-app_settings.read(config_file_path)
+dashboard_settings = ReadDashboardSettings()
+
 
 test_ds = '149.76Mbps'
 test_us = '131.31Mbps'
 test_ping = '1ms'
 test_link = 'http://www.speedtest.net/result/13359052207.png'
 
-# receiver_email = app_settings['DEFAULT']['receiverEmail']
-receiver_email = 'svgamesresults@gmail.com'
-modem_loc = app_settings['DEFAULT']['modemLocation']
+
+receiver_email = dashboard_settings.get_recipient_email()
+modem_loc = dashboard_settings.get_modem_loc()
 
 
-def send_email(email_to: str=receiver_email, email_from: str =environ.get('SPEED_TRACKER_EMAIL'), email_pwd: str =environ.get('SPEED_TRACKER_PWD') )-> None:
+
+# TODO:
+# -[] must be able to know which server and port to send email dynamically
+
+
+
+def send_email(email_to: str=receiver_email, email_from: str =environ.get('DGDM_EMAIL'), email_pwd: str =environ.get('DGDM_PASS') )-> None:
     """SEND GMAIL"""
 
     gmail_server = 'smtp.gmail.com'
@@ -31,7 +36,7 @@ def send_email(email_to: str=receiver_email, email_from: str =environ.get('SPEED
     # CREATING THE EMAIL MESSAGE - START
     msg = EmailMessage()
     msg['Subject'] = 'SPEED TRACKER ALERT' # Subject of Email
-    msg['From'] = "DGApps.io"
+    msg['From'] = "SpeedTracker.net"
     msg['To'] = email_to
     msg.set_content(
         f'Your Internet Speed Is Dropping\n\
@@ -40,8 +45,8 @@ def send_email(email_to: str=receiver_email, email_from: str =environ.get('SPEED
         \nDownload: {test_ds}\
         \nPing: {test_ping}\
         \nImage: {test_link}\
-        \n\nPlease contact Flow then report this issue to your work.\
-        \nPowered by DGApps.io') # Email body or Content
+        \n\nPlease contact your network provider then report this issue to your work.\
+        \nPowered by Govine I.T Solutions') # Email body or Content
     
     # CREATING THE EMAIL MESSAGE - END
 
@@ -54,4 +59,4 @@ def send_email(email_to: str=receiver_email, email_from: str =environ.get('SPEED
     # SENDING EMAIL - END
 
 
-# send_email()
+send_email()
