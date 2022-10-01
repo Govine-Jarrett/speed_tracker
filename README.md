@@ -1,5 +1,5 @@
 <body>
-<h1>WELCOME TO SPEED TRACKER V0.1.2</h1>
+<h1>SPEED TRACKER V0.1.2</h1>
 
 <img src="res/image/Speed_Tracker_logo.png">
 
@@ -9,18 +9,27 @@
     - 
     - 
 
-<h1>Dashboard</h1>
+<h1>Dashboard Design</h1>
 
 <img src="res/image/Speed_Tracker_Screenshot.png">
 
 <h2>How to use Speed Tracker</h2>
 <p>
-You will first need to launch the Speed Tracker dashboard.
-You should see a start screen when launching the dashboard for the
-first time.
 
+<h3>Step 1:</h3>
+    First you will ne to open the Speed Tracker dashboard,
+    if the entries in the dashboard is the same as the screenshot above,
+    you will need to change those entries to your liking by doing the following:
 
-<a href="https://www.youtube.com/watch?v=c2h0Tvu2El4"> Watch the Youtube Video here</a>
+<h3>Step 2:</h3>
+    Click on any of the two edit checkboxes, then change each entry.
+    Note before unchecking any of the boxes you must select the save button
+    to store your entires.
+
+<h3>Step 3:</h3>
+    Now you will need to create a schedular with 'Task Scheduler'.
+    <a href="https://www.youtube.com/channel/UCg6m_8coxXFFPdzF4B7tN_Q/featured">How to use task Scheduler</a>
+
 
 
 <h4>Why Speed Tracker was created?</h4>
