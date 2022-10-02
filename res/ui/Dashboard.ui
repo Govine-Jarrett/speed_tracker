@@ -1,0 +1,229 @@
+<?xml version='1.0' encoding='utf-8'?>
+<interface version="1.2">
+  <object class="tk.Toplevel" id="_DashboardToplevel">
+    <property name="height">600</property>
+    <property name="iconphoto">Speed_Tracker_logo.png</property>
+    <property name="resizable">none</property>
+    <property name="title" translatable="yes">Dashboard</property>
+    <property name="width">585</property>
+    <child>
+      <object class="ttk.Frame" id="_MainFrame">
+        <layout manager="pack">
+          <property name="side">top</property>
+        </layout>
+        <child>
+          <object class="ttk.Frame" id="_BannerFrame">
+            <layout manager="pack">
+              <property name="side">top</property>
+            </layout>
+            <child>
+              <object class="ttk.Label" id="_BannerLabel">
+                <property name="image">Speed_Tracker_Banner.png</property>
+                <layout manager="pack">
+                  <property name="side">top</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Frame" id="_BodyFrame">
+            <layout manager="pack">
+              <property name="side">top</property>
+            </layout>
+            <child>
+              <object class="ttk.Labelframe" id="_SpeedLabelframe">
+                <property name="height">260</property>
+                <property name="text" translatable="yes">Speed Settings</property>
+                <property name="width">580</property>
+                <layout manager="pack">
+                  <property name="side">top</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Labelframe" id="_EmailSenderLabelframe">
+                <property name="height">120</property>
+                <property name="text" translatable="yes">Email Sender</property>
+                <property name="width">580</property>
+                <layout manager="pack">
+                  <property name="side">top</property>
+                </layout>
+                <child>
+                  <object class="ttk.Label" id="EmailSenderLabel">
+                    <property name="text" translatable="yes">Email Address:</property>
+                    <layout manager="place">
+                      <property name="anchor">nw</property>
+                      <property name="relx">0.01</property>
+                      <property name="rely">0.1</property>
+                      <property name="x">0</property>
+                      <property name="y">0</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Entry" id="EmailSenderEntry">
+                    <property name="state">disabled</property>
+                    <property name="text" translatable="yes">speed.tracker@gmail.com</property>
+                    <property name="validate">key</property>
+                    <property name="validatecommand" type="command" cbtype="entry_validate" args="">is_email_valid</property>
+                    <layout manager="place">
+                      <property name="anchor">nw</property>
+                      <property name="relx">0.01</property>
+                      <property name="rely">0.31</property>
+                      <property name="x">0</property>
+                      <property name="y">0</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Label" id="PasswordLabel">
+                    <property name="text" translatable="yes">Password:</property>
+                    <layout manager="place">
+                      <property name="anchor">nw</property>
+                      <property name="relx">0.30</property>
+                      <property name="rely">0.08</property>
+                      <property name="x">0</property>
+                      <property name="y">0</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Entry" id="PasswordEntry">
+                    <property name="show">•</property>
+                    <property name="state">disabled</property>
+                    <property name="text" translatable="yes">Password123</property>
+                    <layout manager="place">
+                      <property name="anchor">nw</property>
+                      <property name="relx">0.30</property>
+                      <property name="rely">0.31</property>
+                      <property name="x">0</property>
+                      <property name="y">0</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Label" id="ServerPortLabel">
+                    <property name="text" translatable="yes">Port:</property>
+                    <layout manager="place">
+                      <property name="anchor">nw</property>
+                      <property name="relx">0.60</property>
+                      <property name="rely">0.08</property>
+                      <property name="x">0</property>
+                      <property name="y">0</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Label" id="SelectServerLabel">
+                    <property name="text" translatable="yes">Server:</property>
+                    <layout manager="place">
+                      <property name="anchor">nw</property>
+                      <property name="relx">0.79</property>
+                      <property name="rely">0.08</property>
+                      <property name="x">0</property>
+                      <property name="y">0</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Combobox" id="ServerCombobox">
+                    <property name="state">disabled</property>
+                    <property name="values">smtp.gmail.com smtp.mail.yahoo.com</property>
+                    <property name="width">15</property>
+                    <layout manager="place">
+                      <property name="anchor">nw</property>
+                      <property name="relx">0.79</property>
+                      <property name="rely">0.29</property>
+                      <property name="x">0</property>
+                      <property name="y">0</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Combobox" id="ServerPortCombobox">
+                    <property name="state">disabled</property>
+                    <property name="values">995 587 465 110 25</property>
+                    <property name="width">9</property>
+                    <layout manager="place">
+                      <property name="anchor">nw</property>
+                      <property name="relx">0.6</property>
+                      <property name="rely">0.29</property>
+                      <property name="x">0</property>
+                      <property name="y">0</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Checkbutton" id="EditSenderCheckbutton">
+                    <property name="command" type="command" cbtype="simple">edit_email_sender</property>
+                    <property name="cursor">hand2</property>
+                    <property name="text" translatable="yes">Edit email?</property>
+                    <property name="variable">boolean:edit_email_value</property>
+                    <layout manager="place">
+                      <property name="anchor">nw</property>
+                      <property name="relx">0.01</property>
+                      <property name="rely">0.7</property>
+                      <property name="x">0</property>
+                      <property name="y">0</property>
+                    </layout>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Frame" id="_ControlFrame">
+            <property name="height">60</property>
+            <property name="width">585</property>
+            <layout manager="pack">
+              <property name="side">top</property>
+            </layout>
+            <child>
+              <object class="ttk.Button" id="_SaveBtn">
+                <property name="command" type="command" cbtype="simple">save_settings</property>
+                <property name="state">disabled</property>
+                <property name="text" translatable="yes">S A V E</property>
+                <layout manager="place">
+                  <property name="relx">0.62</property>
+                  <property name="rely">0.23</property>
+                  <property name="width">100</property>
+                  <property name="x">0</property>
+                  <property name="y">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Button" id="CloseBtn">
+                <property name="command" type="command" cbtype="simple">close_dashboard</property>
+                <property name="cursor">hand2</property>
+                <property name="text" translatable="yes">C L O S E</property>
+                <layout manager="place">
+                  <property name="anchor">nw</property>
+                  <property name="relx">0.81</property>
+                  <property name="rely">0.23</property>
+                  <property name="width">100</property>
+                  <property name="x">0</property>
+                  <property name="y">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="_VersionLabel">
+                <property name="text" translatable="yes">V0.1.2</property>
+                <layout manager="place">
+                  <property name="anchor">nw</property>
+                  <property name="relx">0.02</property>
+                  <property name="rely">0.36</property>
+                  <property name="x">0</property>
+                  <property name="y">0</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
