@@ -13,26 +13,28 @@
 
 <img src="res/image/Speed_Tracker_Screenshot.png">
 
-<h2>How To Use Speed Tracker</h2>
 
 <p>
+<h2>How To Use Speed Tracker</h2>
+
 <h5>STEP 1:</h5>
-    First you will need to open the Speed Tracker dashboard,
-    if the entries in the dashboard is the same as the screenshot above,
-    you will need to change those entries to your liking by doing the following:
+First you will need to open the Speed Tracker dashboard,
+if the entries in the dashboard is the same as the screenshot above,
+you will need to change those entries to your liking by doing the following:
 
 <h5>STEP 2:</h5>
-    Click on any of the two edit checkboxes, then change each entry.
-    Note before unchecking any of the boxes you must select the save button
-    to store your entires.
+Click on any of the two edit checkboxes, then change each entry.
+Note before unchecking any of the boxes you must select the save button
+to store your entires.
 
 <h5>STEP 3:</h5>
-    Now you will need to create a schedular with 'Task Scheduler'.
-    <a href="https://www.youtube.com/channel/UCg6m_8coxXFFPdzF4B7tN_Q/featured">How to use task Scheduler</a>
+Now you will need to create a schedular with 'Task Scheduler'.
+<a href="https://www.youtube.com/channel/UCg6m_8coxXFFPdzF4B7tN_Q/featured">How to use task Scheduler</a>
 
 </br>
 </br>
 </br>
+
 <h4>Why Speed Tracker was created?</h4>
 
 I am working from home for a contact center.
