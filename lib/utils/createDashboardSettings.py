@@ -34,7 +34,9 @@ def create_settings() -> None:
         'recipientEmail': 'example@domin.com',
         'modemLocation': 'Home Office',
         'senderEmail':'speed.tracker@gmail.com',
-        'password':'Password123'
+        'password':'Password123',
+        'port':'465',
+        'server':'smtp.gmail.com',
     }
 
     # Create and write settings to file

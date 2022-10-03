@@ -1,0 +1,100 @@
+smtp.gmail.com 	465
+smtp.live.com  587
+smtp.office365.com 587
+smtp.mail.yahoo.com 465
+smtp.mail.yahoo.co.uk 465
+smtp.mail.yahoo.com  465
+smtp.o2.ie 25
+smtp.o2.co.uk 25
+smtp.aol.com 587
+smtp.att.yahoo.com 465
+smtp.ntlworld.com 465
+pop3.btconnect.com 25
+mail.btopenworld.com 25
+mail.btinternet.com 25
+smtp.orange.net 25
+smtp.orange.co.uk 25
+ 
+
+
+
+
+
+Wanadoo UK
+Server:	Authentication:	Port:
+SMTP Server (Outgoing Messages)	smtp.wanadoo.co.uk	 	25
+POP3 Server (Incoming Messages)	pop.wanadoo.co.uk	 	110
+ 
+
+ 
+
+Hotmail
+Server:	Authentication:	Port:
+SMTP Server (Outgoing Messages)	smtp.live.com	SSL	465
+POP3 Server (Incoming Messages)	pop3.live.com	SSL	995
+ 
+
+O2 Online Deutschland
+Server:	Authentication:	Port:
+SMTP Server (Outgoing Messages)	mail.o2online.de	 	25
+POP3 Server (Incoming Messages)	pop.o2online.de	 	110
+ 
+
+T-Online Deutschland
+Server:	Authentication:	Port:
+SMTP Server (Outgoing Messages)	securesmtp.t-online.de	StartTLS	587
+POP3 Server (Incoming Messages)	securepop.t-online.de	SSL	995
+ 
+
+1&1 (1and1)
+Server:	Authentication:	Port:
+SMTP Server (Outgoing Messages)	smtp.1and1.com	StartTLS	587
+POP3 Server (Incoming Messages)	pop.1and1.com	SSL	995
+ 
+
+1&1 Deutschland
+Server:	Authentication:	Port:
+SMTP Server (Outgoing Messages)	smtp.1und1.de	StartTLS	587
+POP3 Server (Incoming Messages)	pop.1und1.de	SSL	995
+ 
+
+Comcast
+Server:	Authentication:	Port:
+SMTP Server (Outgoing Messages)	smtp.comcast.net	 	587
+POP3 Server (Incoming Messages)	mail.comcast.net	 	110
+ 
+
+Verizon
+Server:	Authentication:	Port:
+SMTP Server (Outgoing Messages)	outgoing.verizon.net	SSL	465
+POP3 Server (Incoming Messages)	incoming.verizon.net	SSL	995
+ 
+
+Verizon (Yahoo hosted)
+Server:	Authentication:	Port:
+SMTP Server (Outgoing Messages)	outgoing.yahoo.verizon.net	 	587
+POP3 Server (Incoming Messages)	incoming.yahoo.verizon.net	 	110
+ 
+
+zoho Mail
+Server:	Authentication:	Port:
+SMTP Server (Outgoing Messages)	smtp.zoho.com	SSL	465
+IMAP Server (Incoming Messages)	pop.zoho.com	SSL	995
+ 
+
+Mail.com
+Server:	Authentication:	Port:
+SMTP Server (Outgoing Messages)	smtp.mail.com	StartTLS	587
+POP3 Server (Incoming Messages)	pop.mail.com	SSL	995
+ 
+
+GMX.com
+Server:	Authentication:	Port:
+SMTP Server (Outgoing Messages)	smtp.gmx.com	SSL	465
+POP3 Server (Incoming Messages)	pop.gmx.com	SSL	995
+ 
+
+Net@ddress by USA.NET
+Server:	Authentication:	Port:
+SMTP Server (Outgoing Messages)	smtp.postoffice.net	SSL	465
+POP3 Server (Incoming Messages)	pop3.postoffice.net	SSL	995

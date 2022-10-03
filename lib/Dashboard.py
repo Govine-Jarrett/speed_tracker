@@ -1,345 +1,384 @@
 #!/usr/bin/python3
 import tkinter as tk
-from tkinter import messagebox, BooleanVar
+from tkinter import messagebox
+import tkinter.ttk as ttk
+from utils.updateDashboardSettings import UpdateDashboardSettings
 from utils.readDashboardSettings import ReadDashboardSettings
+from utils.emailServers import EmailServers
 
 
-# TODO:
-# -[x] Check if the 'Dashboard.ini' exist in config folder
-# -[x] Read in data dynamically from the config file
-    # and inset into entry widget
-# -[] Allow the user to edit and save the data 
 
 
 class DashboardApp:
-    dashboard_settings = ReadDashboardSettings()
     def __init__(self, master=None):
+        # build ui
         self.DashboardToplevel = tk.Tk() if master is None else tk.Toplevel(master)
         
-        # Getting image path for the app banner and icon
-        self.img_Speed_Tracker_logo = tk.PhotoImage(file="./res/image/Speed_Tracker_logo.png")
-        self.img_Speed_Tracker_Banner = tk.PhotoImage(file="./res/image/Speed_Tracker_Banner.png")
+        load_dashboard_settings = ReadDashboardSettings()
+        self.update_dashboard_settings = UpdateDashboardSettings()
+        secure_servers = EmailServers()
         
         
-        # Build toplevel window
-        self.DashboardToplevel.geometry("585x530+355+100")
-        self.DashboardToplevel.iconphoto(True, self.img_Speed_Tracker_logo)
-        self.DashboardToplevel.resizable(False, False)
-        self.DashboardToplevel.title("Speed Tracker Dashboard")
         
         
-        # Creating the main frame to place all widgets
-        self.MainFrame = tk.Frame(self.DashboardToplevel)
         
         
-        # Creating the banner frame to place the app banner
-        self.BannerFrame = tk.Frame(self.MainFrame)
-        #  Adding the banner image to the banner frame
-        self.BannerLabel = tk.Label(self.BannerFrame)
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #######################
+        #     INITIALIZING    #
+        #     ALL WIDGETS     #
+        #######################
+
+
+
+        # MainFrame
+        self.MainFrame = ttk.Frame(self.DashboardToplevel)
         
-        # Customizing banner label
-        self.BannerLabel.configure(image=self.img_Speed_Tracker_Banner)
+        # Section 1
+        self.BannerFrame = ttk.Frame(self.MainFrame)
+        self.BannerLabel = ttk.Label(self.BannerFrame)
+        
+        # Section 2
+        self.FormFrame = tk.Frame(self.MainFrame)
+
+        # Section 2: 1
+        self.SpeedLabelframe = ttk.Labelframe(self.FormFrame)
+        self.UploadSpeedLabel = ttk.Label(self.SpeedLabelframe)
+        self.DownloadSpeedLabel = ttk.Label(self.SpeedLabelframe)
+        self.ModemLocationLabel = ttk.Label(self.SpeedLabelframe)
+        self.RecipientEmailLabel = ttk.Label(self.SpeedLabelframe)
+        self.UploadSpeedEntry = ttk.Entry(self.SpeedLabelframe)
+        self.DownloadSpeedEntry = ttk.Entry(self.SpeedLabelframe)
+        self.ModemLocationEntry = ttk.Entry(self.SpeedLabelframe)
+        self.RecipientEmailEntry = ttk.Entry(self.SpeedLabelframe)
+        self.EditSpeedSettingsCheckbutton = ttk.Checkbutton(self.SpeedLabelframe)
+        
+        # Section 2: 2
+        self.EmailSenderLabelframe = ttk.Labelframe(self.FormFrame)
+        self.EmailSenderLabel = ttk.Label(self.EmailSenderLabelframe)
+        self.EmailSenderEntry = ttk.Entry(self.EmailSenderLabelframe)
+        self.PasswordLabel = ttk.Label(self.EmailSenderLabelframe)
+        self.PasswordEntry = ttk.Entry(self.EmailSenderLabelframe)
+        self.ServerPortLabel = ttk.Label(self.EmailSenderLabelframe)
+        self.SelectServerLabel = ttk.Label(self.EmailSenderLabelframe)
+        self.ServerPortCombobox = ttk.Combobox(self.EmailSenderLabelframe)
+        self.ServerCombobox = ttk.Combobox(self.EmailSenderLabelframe)
+        self.EditSenderEmailCheckbutton = ttk.Checkbutton(self.EmailSenderLabelframe)
 
         
-        # Creating the form frame 
-        self.FormFrame = tk.Frame(self.MainFrame)
+        # Section 3
+        self.ControlFrame = ttk.Frame(self.MainFrame)
+        self.SaveBtn = ttk.Button(self.ControlFrame)
+        self.CloseBtn = ttk.Button(self.ControlFrame)
+        self.VersionLabel = ttk.Label(self.ControlFrame)
+
+
+
+
+
+
+
+
+
+
+
+        #######################
+        #     LOAD IN ALL     #
+        #     IMAGES FOR      #
+        #       WIDGETS       #
+        #######################
+
+        # App logo
+        self.img_Speed_Tracker_logo = tk.PhotoImage(file="./res/image/Speed_Tracker_logo.png")
         
-        # Adding the Settings label frames
-        self.SettingsLabelframe = tk.LabelFrame(self.FormFrame)
-        
-        
-        
-        # Adding the  widgets to the Settings label frame
-        
-        # Label
-        self.uploadSpeedLabel = tk.Label(self.SettingsLabelframe)
-        # Entry
-        self.UploadSpeedEntry = tk.Entry(self.SettingsLabelframe)
-        
-        # label
-        self.DownloadSpeedLabel = tk.Label(self.SettingsLabelframe)
-        # Entry
-        self.DownloadSpeedEntry = tk.Entry(self.SettingsLabelframe)
-        
-        # Label
-        self.RecipientEmailLabel = tk.Label(self.SettingsLabelframe)
-        # Entry
-        self.RecipientEmailEntry = tk.Entry(self.SettingsLabelframe)
-        
-        # Label
-        self.ModemLocationLabel = tk.Label(self.SettingsLabelframe)
-        # Entry
-        self.ModemLocationEntry = tk.Entry(self.SettingsLabelframe)
-        
-        # Edit Speed Settings Checkbutton
-        self.speed_settings_value = BooleanVar()
-        self.EditSpeedSettingsCheckbutton = tk.Checkbutton(self.SettingsLabelframe, variable=self.speed_settings_value)
-        
-        
-        
-        
-        # Adding the Sender's Email label frame
-        self.SendersEmailLabelframe = tk.LabelFrame(self.FormFrame)
-        
-        # Adding the widget ti the Senders Email label frame
-        
-        # Label
-        self.SenderEmailLabel = tk.Label(self.SendersEmailLabelframe)
-        # Entry
-        self.SenderEmailEntry = tk.Entry(self.SendersEmailLabelframe)
-        
-        # Label
-        self.SenderPasswordLabel = tk.Label(self.SendersEmailLabelframe)
-        # Entry
-        self.SenderPasswordEntry = tk.Entry(self.SendersEmailLabelframe)
-        
-        # Edit Sender Email Checkbutton
-        self.edit_sender_email_value = BooleanVar()
-        self.EditSenderEmailCheckbutton = tk.Checkbutton(self.SendersEmailLabelframe, variable=self.edit_sender_email_value)
+        # App banner
+        self.img_Speed_Tracker_Banner = tk.PhotoImage(file="./res/image/Speed_Tracker_Banner.png")
+
+
+
+
+
+
+
+
+
+        #######################
+        #    STYLING WIDGETS  #
+        #######################
         
         
         
-        # Creating the control frame
-        self.ControlFrame = tk.Frame(self.MainFrame)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #######################
+        #     READING DATA    #
+        #     FROM CONFIG     #
+        #######################
+
         
-        # Adding the Save and Exit buttons along with the version label
-        self.VersionLabel = tk.Label(self.ControlFrame)
-        self.SaveBtn = tk.Button(self.ControlFrame)
-        self.ExitBtn = tk.Button(self.ControlFrame)
+        # SPEED SETTINGS
         
-        
-        
-        
-        
-        
-        
-        
-        # Customizing buttons and label
-        
-        # Speed Setting Frame
-        self.SettingsLabelframe.configure(
-            font="{@Microsoft YaHei UI} 12 {}",
-            height=260,
-            text="Speed Settings",
-            width=580,
-        )
-        # Upload speed
-        # Label
-        self.uploadSpeedLabel.configure(
-            font="{Microsoft} 11 {}", text="Upload Speed in MB:"
-        )
-        # Entry
-        self.UploadSpeedEntry.configure(
-            font="{@Microsoft YaHei UI} 10 {}", state="disabled"
-        )
- 
-        # Reading data from config
-        _upload_ = DashboardApp.dashboard_settings.get_upload()
+        # Upload Speed Entry
+        _upload_ = load_dashboard_settings.get_upload()
         self.UploadSpeedEntry["state"] = "normal"
         self.UploadSpeedEntry.delete("0", "end")
         self.UploadSpeedEntry.insert("0", _upload_)
         self.UploadSpeedEntry["state"] = "disabled"
         
-        # Download speed
-        # Label
-        self.DownloadSpeedLabel.configure(
-            font="{Microsoft} 11 {}", text="Download Speed in MB:"
-        )
-        # Entry
-        self.DownloadSpeedEntry.configure(
-            font="{@Microsoft YaHei UI} 10 {}", state="disabled"
-        )
-        # Reading data from config
-        _download_ = DashboardApp.dashboard_settings.get_download()
+        # Download Speed Entry
+        _download_ = load_dashboard_settings.get_download()
         self.DownloadSpeedEntry["state"] = "normal"
         self.DownloadSpeedEntry.delete("0", "end")
         self.DownloadSpeedEntry.insert("0", _download_)
         self.DownloadSpeedEntry["state"] = "disabled"
         
-        # Edit Speed Settings Checkbutton
-        self.EditSpeedSettingsCheckbutton.configure(
-            cursor="hand2", font="{Microsoft} 10 {}",
-            overrelief="flat", takefocus=True, text="Edit settings?",
-        )
-        
-        
-        # Recipient Email
-        # Label
-        self.RecipientEmailLabel.configure(
-            font="{Microsoft} 11 {}", text="Recipient Email:"
-        )
-        # Entry
-        self.RecipientEmailEntry.configure(
-            font="{@Microsoft YaHei UI} 10 {}", state="disabled"
-        )
-        # Reading data from config
-        _recipient_ = DashboardApp.dashboard_settings.get_recipient_email()
+        # Recipient Email Entry
+        _recipient_ = load_dashboard_settings.get_recipient_email()
         self.RecipientEmailEntry["state"] = "normal"
         self.RecipientEmailEntry.delete("0", "end")
         self.RecipientEmailEntry.insert("0", _recipient_)
         self.RecipientEmailEntry["state"] = "disabled"
-        
-        # Modem Location
-        # Label
-        self.ModemLocationLabel.configure(
-            font="{Microsoft} 11 {}", text="Modem Location:"
-        )
-        # Entry
-        self.ModemLocationEntry.configure(
-            font="{@Microsoft YaHei UI} 10 {}", state="disabled"
-        )
-        
-        # Reading data from config
-        _location_ = DashboardApp.dashboard_settings.get_modem_loc()
+
+        # Modem Location Entry
+        _location_ = load_dashboard_settings.get_modem_loc()
         self.ModemLocationEntry["state"] = "normal"
         self.ModemLocationEntry.delete("0", "end")
         self.ModemLocationEntry.insert("0", _location_)
         self.ModemLocationEntry["state"] = "disabled"
-        
-        # Edit Speed Settings Checkbutton
-        self.EditSpeedSettingsCheckbutton.configure(command=self.edit_speed_settings)
-        
-        
-        
-        
 
+
+
+
+
+
+        # EMAIL SENDER
+        _sender_ = load_dashboard_settings.get_sender_email()
+        self.EmailSenderEntry["state"] = "normal"
+        self.EmailSenderEntry.delete("0", "end")
+        self.EmailSenderEntry.insert("0", _sender_)
+        self.EmailSenderEntry["state"] = "disabled"      
+
+
+
+        _password_ = load_dashboard_settings.get_password()
+        self.PasswordEntry["state"] = "normal"
+        self.PasswordEntry.delete("0", "end")
+        self.PasswordEntry.insert("0", _password_)
+        self.PasswordEntry["state"] = "disabled"
+
+
+        _port_ = load_dashboard_settings.get_port()
+        self.ServerPortCombobox.set(_port_)
+        
+        _server_ = load_dashboard_settings.get_server()
+        self.ServerCombobox.set(_server_)
+
+
+
+
+
+
+
+        #######################
+        #     CONFIGURING     #
+        #     ALL WIDGETS     #
+        #######################
+
+        # Toplevel
+        self.DashboardToplevel.title("Dashboard")
+        self.DashboardToplevel.geometry("585x530+355+100")
+        # App logo
+        self.DashboardToplevel.iconphoto(True, self.img_Speed_Tracker_logo)
+        self.DashboardToplevel.configure(height=600, width=585)
+        self.DashboardToplevel.resizable(False, False)
+        
+        # Main Frame
+        
+        # Banner Frame
+        # App banner
+        self.BannerLabel.configure(image=self.img_Speed_Tracker_Banner)
+
+        # Form Frame
+        
+        
+        # Speed Settings Label Frame
+        self.SpeedLabelframe.configure(height=260, text="Speed Settings", width=580)
         
         
         
-        # Email Sender Frame
-        self.SendersEmailLabelframe.configure(
-            font="{@Microsoft YaHei UI} 12 {}",
-            height=120,
-            text="Sender's Email",
-            width=580,
+        
+        self.UploadSpeedLabel.configure(text="Upload Speed in MB:")
+        self.DownloadSpeedLabel.configure(text="Download Speed in MB:")
+        self.ModemLocationLabel.configure(text="Modem Location:")
+        self.RecipientEmailLabel.configure(text="Email Address:")
+        self.UploadSpeedEntry.configure(state="disabled", validate="key")
+        self.UploadSpeedEntry.configure(validatecommand=self.is_speed_valid)
+        self.DownloadSpeedEntry.configure(state="disabled")
+        self.ModemLocationEntry.configure(state="disabled")
+        self.RecipientEmailEntry.configure(state="disabled")
+        
+        self.speed_settings_value = tk.BooleanVar()
+        self.EditSpeedSettingsCheckbutton.configure(
+            cursor="hand2", text="Edit speed?", variable=self.speed_settings_value,
+            command=self.edit_speed_settings
         )
-        # Label
-        self.SenderEmailLabel.configure(font="{Microsoft} 11 {}", text="Email:")
-        # Entry
-        self.SenderEmailEntry.configure(
-            font="{@Microsoft YaHei UI} 10 {}", state="disabled"
+        
+        
+        
+        # Email Sender Label Frame
+        self.EmailSenderLabelframe.configure(height=120, text="Email Sender", width=580)
+        
+        
+        self.EmailSenderLabel.configure(text="Email Address:")
+        self.EmailSenderEntry.configure(state="disabled")
+        
+        self.PasswordLabel.configure(text="Password:")
+        self.PasswordEntry.configure(show="*", state="disabled")
+        
+        
+        
+        _server_port_value = secure_servers.get_ports()
+        self.ServerPortLabel.configure(text="Port:")
+        self.ServerPortCombobox.configure(
+            state="disabled", values=_server_port_value, width=9
         )
-        # Reading data from config
-        _sender_ = DashboardApp.dashboard_settings.get_sender_email()
-        self.SenderEmailEntry["state"] = "normal"
-        self.SenderEmailEntry.delete("0", "end")
-        self.SenderEmailEntry.insert("0", _sender_)
-        self.SenderEmailEntry["state"] = "disabled"
         
-        # Label
-        self.SenderPasswordLabel.configure(font="{Microsoft} 11 {}", text="Password:")
-        self.SenderPasswordEntry.configure(
-            font="{@Microsoft YaHei UI} 10 {}", show="*", state="disabled"
+        _server_value = secure_servers.get_servers()
+        self.SelectServerLabel.configure(text="Server:")
+        self.ServerCombobox.configure(
+            state="disabled", values=_server_value, width=15
         )
-        # Reading data from config
-        _password_ = DashboardApp.dashboard_settings.get_password()
-        self.SenderPasswordEntry["state"] = "normal"
-        self.SenderPasswordEntry.delete("0", "end")
-        self.SenderPasswordEntry.insert("0", _password_)
-        self.SenderPasswordEntry["state"] = "disabled"
         
-        # Edit Sender Email Checkbutton
-        self.EditSenderEmailCheckbutton.configure(command=self.edit_sender_email)
-        
-        # Entry
+        # Check button for editing sender email
+        self._email_sender_value = tk.BooleanVar()
         self.EditSenderEmailCheckbutton.configure(
-            cursor="hand2",
-            font="{Microsoft} 10 {}",
-            overrelief="flat",
-            text="Edit sender info?"
+            cursor="hand2", text="Edit email?", variable=self._email_sender_value,command=self.edit_email_sender
         )
-        
-        
-        
-        
-        
-        
-        
+
         
         
         # Control Frame
-        self.ControlFrame.configure(height=50, width=585)
-        # App version label
-        self.VersionLabel.configure(font="{@Microsoft YaHei} 8 {}", pady=10, text="V0.1.2")
-        # Save button
-        self.SaveBtn.configure(
-            activebackground="#299693",
-            activeforeground="#ffffff",
-            background="#ffffff",
-            cursor="arrow",
-            default="disabled",
-            disabledforeground="#1c0037",
-            font="{Microsoft} 11 {}",
-            foreground="#299693",
-            state="disabled", text="Save",
-            command=self.save_config
-        )
-        # Exit button
-        self.ExitBtn.configure(
-            activebackground="#cd0532",
-            activeforeground="#ffffff",
-            background="#ffffff",
-            cursor="hand2",
-            default="normal",
-            disabledforeground="#1c0037",
-            font="{Microsoft} 11 {}",
-            foreground="#cd0532",
-            state="normal", text="Close",
-            command=self.exit_dashboard
-        )
+        self.ControlFrame.configure(height=60, width=585)
+        self.VersionLabel.configure(text="V0.1.2")
+        self.SaveBtn.configure(state="disabled", text="S A V E", command=self.save_settings)
+        self.CloseBtn.configure(cursor="hand2", text="C L O S E",command=self.close_dashboard)
 
 
 
-        
-        
+
+
+
+
+
+
+
+
+
+
+
+
+
         #######################
         # PACKING AND PLACING #
         #     ALL WIDGETS     #
         #######################
 
-        # Body
+
+        # Main body
         self.MainFrame.pack(side="top")
-        
+
         # Section 1
         self.BannerFrame.pack(side="top")
         self.BannerLabel.pack(side="top")
         
+        
         # Section 2
         self.FormFrame.pack(side="top")
-        self.SettingsLabelframe.pack(side="top")
-        self.uploadSpeedLabel.place(anchor="nw", relx=0.05, rely=0.06, x=0, y=0)
-        self.UploadSpeedEntry.place(relx=0.05, rely=0.25, x=0, y=0)
-        self.DownloadSpeedLabel.place(anchor="nw", relx=0.61, rely=0.06, x=0, y=0)
-        self.DownloadSpeedEntry.place(relx=0.61, rely=0.25, x=0, y=0)
-        self.RecipientEmailLabel.place(anchor="nw", relx=0.05, rely=0.57, x=0, y=0)
-        self.RecipientEmailEntry.place(relx=0.05, rely=0.73, x=0, y=0)
-        self.ModemLocationLabel.place(anchor="nw", relx=0.61, rely=0.57, x=0, y=0)
-        self.ModemLocationEntry.place(relx=0.61, rely=0.73, x=0, y=0)
-        self.EditSpeedSettingsCheckbutton.place(relx=0.38, rely=0.87, x=0, y=0)
+
+        # Section 2: 1
+        self.SpeedLabelframe.pack(side="top")
+        self.DownloadSpeedLabel.place(anchor="nw", relx=0.62, rely=0.13, x=0, y=0)
+        self.UploadSpeedLabel.place(anchor="nw", relx=0.14, rely=0.13, x=0, y=0)
+        self.ModemLocationLabel.place(anchor="nw", relx=0.62, rely=0.50, x=0, y=0)
+        self.RecipientEmailLabel.place(anchor="nw", relx=0.14, rely=0.50, x=0, y=0)
+        self.UploadSpeedEntry.place(anchor="nw", relx=0.14, rely=0.25, x=0, y=0)
+        self.DownloadSpeedEntry.place(anchor="nw", relx=0.62, rely=0.25, x=0, y=0)
+        self.ModemLocationEntry.place(anchor="nw", relx=0.62, rely=0.62, x=0, y=0)
+        self.RecipientEmailEntry.place(anchor="nw", relx=0.14, rely=0.62, x=0, y=0)
+        self.EditSpeedSettingsCheckbutton.place(
+            anchor="nw", relx=0.14, rely=0.88, x=0, y=0
+        )
+        
+        # Section 2: 2
+        self.EmailSenderLabelframe.pack(side="top")
+        self.EmailSenderLabel.place(anchor="nw", relx=0.01, rely=0.1, x=0, y=0)
+        self.EmailSenderEntry.place(anchor="nw", relx=0.01, rely=0.31, x=0, y=0)
+        self.PasswordLabel.place(anchor="nw", relx=0.30, rely=0.08, x=0, y=0)
+        self.PasswordEntry.place(anchor="nw", relx=0.30, rely=0.31, x=0, y=0)
+        self.ServerPortLabel.place(anchor="nw", relx=0.60, rely=0.08, x=0, y=0)
+        self.SelectServerLabel.place(anchor="nw", relx=0.79, rely=0.08, x=0, y=0)
+        self.ServerCombobox.place(anchor="nw", relx=0.79, rely=0.29, x=0, y=0)
+        self.ServerPortCombobox.place(anchor="nw", relx=0.6, rely=0.29, x=0, y=0)
+        self.EditSenderEmailCheckbutton.place(
+            anchor="nw", relx=0.01, rely=0.7, x=0, y=0
+        )
         
         # Section 3
-        self.SendersEmailLabelframe.pack(side="top")
-        self.SenderEmailLabel.place(anchor="nw", relx=0.05, rely=0.06, x=0, y=0)
-        self.SenderEmailEntry.place(relx=0.05, rely=0.42, x=0, y=0)
-        self.SenderPasswordLabel.place(anchor="nw", relx=0.61, rely=0.06, x=0, y=0)
-        self.SenderPasswordEntry.place(relx=0.61, rely=0.42, x=0, y=0)
-        self.EditSenderEmailCheckbutton.place(relx=0.38, rely=0.65, x=0, y=0)
-       
-        # Section 4
         self.ControlFrame.pack(side="top")
-        self.VersionLabel.place(anchor="nw", relx=0.05, rely=0.09, x=0, y=0)
-        self.SaveBtn.place(anchor="nw", relx=0.72, rely=0.17, x=0, y=0)
-        self.ExitBtn.place(anchor="nw", relx=0.83, rely=0.17, x=0, y=0)
+        self.VersionLabel.place(anchor="nw", relx=0.02, rely=0.36, x=0, y=0)
+        self.SaveBtn.place(relx=0.62, rely=0.23, width=100, x=0, y=0)
+        self.CloseBtn.place(anchor="nw", relx=0.81, rely=0.23, width=100, x=0, y=0)
 
 
 
         # Launching the toplevel window
         self.mainwindow = self.DashboardToplevel
+  
+  
+  
+  
+  
+#######################
+#   BUSINESS LOGICS   #
+#######################
 
 
 
     def run(self):
         self.mainwindow.mainloop()
+
+
+
+
+    def is_speed_valid(self):
+        pass
 
 
 
@@ -355,7 +394,7 @@ class DashboardApp:
         if self.speed_settings_value.get():
             
             # Enabling the save button 
-            self.SaveBtn.configure(state='normal', cursor='hand2', background="#299693", foreground="#ffffff")
+            self.SaveBtn.configure(state='normal', cursor='hand2')
         
             # Enabling the Upload and download entry  
             self.UploadSpeedEntry.configure(state='normal')
@@ -375,60 +414,99 @@ class DashboardApp:
             self.ModemLocationEntry.configure(state='disable')
             
             # Check if the button is enabled
-            if not self.edit_sender_email_value.get():
+            if not self._email_sender_value.get():
                 # Disabling the save button 
-                self.SaveBtn.configure(state='disable', cursor='arrow',  background="#ffffff", foreground="#299693")
-                    
+                self.SaveBtn.configure(state='disable', cursor='arrow')
+                
 
 
 
-    def edit_sender_email(self):
+
+    def is_email_valid(self):
+        pass
+
+
+
+
+    def edit_email_sender(self):
         """
         Enable the sender's email and password entry widgets
         if the check button is selected.
         
         Otherwise disable them.
         """
-        if self.edit_sender_email_value.get():
+        if self._email_sender_value.get():
             # Enabling the Email  and Password entry
-            self.SenderEmailEntry.configure(state='normal')
-            self.SenderPasswordEntry.configure(state='normal')
+            self.EmailSenderEntry.configure(state='normal')
+            self.PasswordEntry.configure(state='normal')
             # Show the password
-            self.SenderPasswordEntry.configure(show='')
+            self.PasswordEntry.configure(show='')
             
             # Check if the button is enabled
             if not self.speed_settings_value.get():
-                # Enabling the save button 
-                self.SaveBtn.configure(state='normal', cursor='hand2', background="#299693", foreground="#ffffff")
+                # Enabling the save button and Combobox
+                self.SaveBtn.configure(state='normal', cursor='hand2')
+        
+                self.ServerPortCombobox.configure(state='normal', cursor='hand2')
+                self.ServerCombobox.configure(state='normal', cursor='hand2')
+                
  
         else:
             # Enabling the Email  and Password entry
-            self.SenderEmailEntry.configure(state='disable')
-            self.SenderPasswordEntry.configure(state='disable')
+            self.EmailSenderEntry.configure(state='disable')
+            self.PasswordEntry.configure(state='disable')
             # Hide the password
-            self.SenderPasswordEntry.configure(show='*')
+            self.PasswordEntry.configure(show='*')
             
             # Check if the button is enabled
             if not self.speed_settings_value.get():
                 # Disabling the save button 
-                self.SaveBtn.configure(state='disable', cursor='arrow', background="#ffffff", foreground="#299693")
+                self.SaveBtn.configure(state='disable', cursor='arrow')
+                self.ServerPortCombobox.configure(state='disable', cursor='arrow')
+                self.ServerCombobox.configure(state='disable', cursor='arrow')
 
 
 
 
-    def save_config(self):
-        # validate entries
-            # confirm is the user can to save to new data
-        pass
+    def save_settings(self):
+        """
+        Save the data from each entry
+        """
+        # This is a test
+        self.update_dashboard_settings.set_upload(self.UploadSpeedEntry.get())
+        self.update_dashboard_settings.set_download(self.DownloadSpeedEntry.get())
+        self.update_dashboard_settings.set_recipient_email(self.RecipientEmailEntry.get())
+        self.update_dashboard_settings.set_modem_loc(self.ModemLocationEntry.get())
+        self.update_dashboard_settings.set_sender_email(self.EmailSenderEntry.get())
+        self.update_dashboard_settings.set_password(self.PasswordEntry.get())
+        self.update_dashboard_settings.set_port(self.ServerPortCombobox.get())
+        self.update_dashboard_settings.set_server(self.ServerCombobox.get())
+        # pass
 
 
 
-
-    def exit_dashboard(self):
-        # check if the user is sure that they want to exit
+    def close_dashboard(self):
+        """
+        Confirm if the user want to close the dashboard.
+        """
         if messagebox.askyesno('Close Dashboard', 'Are you sure you want to close the dashboard?'):
             self.DashboardToplevel.destroy()
+
+
+
 
 if __name__ == "__main__":
     app = DashboardApp()
     app.run()
+
+
+# TODO:
+# -[] Validate the data before saving.
+# -[] disable all entries after the data was update.
+# -[] Show a pop dialog that the entries was save.
+# -[] Encrypt the password before saving to config.
+
+
+# BUG:
+# -[] if the speed settings check button is marked tick and i try to also tick the sender email check button
+# all entires will be set to normal expect for the comboboxes.

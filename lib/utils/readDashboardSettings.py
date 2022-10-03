@@ -83,6 +83,28 @@ class ReadDashboardSettings:
             str: The per-define password
         """
         return self.settings['DEFAULT']['password']
+    
+    
+    
+    def get_port(self) -> int:
+        """
+        get a pre-define SMTP server port from the config file.
+        
+        Returns:
+            int: The pre-define port
+        """
+        return self.settings['DEFAULT']['port']
+    
+    
+    
+    def get_server(self) -> int:
+        """
+        get a pre-define SMTP server from the config file.
+        
+        Returns:
+            int: The pre-define server
+        """
+        return self.settings['DEFAULT']['server']
         
     
     
