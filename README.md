@@ -1,16 +1,18 @@
 <body>
 <img src="res/image/Speed_Tracker_logo.png">
-<h1>SPEED TRACKER V0.1.2</h1>
-<h2>Project is currently under development</h2>
-
-
-
-<h3>Dashboard Design</h3>
-
-<img src="res/image/Speed_Tracker_Screenshot.png">
 
 
 <p>
+<h1>SPEED TRACKER V0.1.2</h1>
+<h1>CURRENTLY UNDER DEVELOPMENT</h2>
+</br>
+</br>
+
+<h3>Launch Screen:</h3>
+<img src="res/image/Speed_Tracker_Screenshot.png">
+</br>
+</br>
+
 <h3>How To Use Speed Tracker</h3>
 
 <h5>STEP 1:</h5>
@@ -32,18 +34,18 @@ Now you will need to create a schedular with 'Task Scheduler'.
 </br>
 </br>
 
-<h3>Edit Speed Settings & More:</h3>
+<h3>Edit Speed Settings & More Selected:</h3>
 <img src="res/image/edit_settings_preview.png"> 
 </br>
 </br>
 
-<h3>Edit Email Sender Settings:</h3>
+<h3>Edit Email Settings Selected :</h3>
 <img src="res/image/edit_sender_info_preview.png"> 
 
 </br>
 </br>
 
-<h3>Both Check buttons Selected:</h3>
+<h3>Both Settings Selected:</h3>
 <img src="res/image/edit_all_preview.png"> 
 
 </br>
