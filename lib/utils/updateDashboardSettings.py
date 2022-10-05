@@ -12,23 +12,22 @@ class UpdateDashboardSettings:
         self.settings = ConfigParser()
         self.settings.read(config_file_path)
 
+
     
-    
-    
-    def set_upload(self, value) -> bool:
+    def set_upload(self, value) -> None:
         self.settings.set('DEFAULT','minUploadSpeed',value)
         with open(config_file_path, 'w') as new_config:
             self.settings.write(new_config)
     
     
     
-    def set_download(self, value) -> bool:
+    def set_download(self, value) -> None:
         self.settings.set('DEFAULT','minDownloadSpeed',value)
         with open(config_file_path, 'w') as new_config:
             self.settings.write(new_config)
     
     
-    def set_recipient_email(self, value) -> bool:
+    def set_recipient_email(self, value) -> None:
         self.settings.set('DEFAULT','recipientEmail',value)
         with open(config_file_path, 'w') as new_config:
             self.settings.write(new_config)
@@ -68,6 +67,13 @@ class UpdateDashboardSettings:
             self.settings.write(new_config)   
     
     
+    def set_status(self) -> None:
+        """
+        Set status to false.
+        """
+        self.settings.set('DEFAULT','isFirstTime','False')
+        with open(config_file_path, 'w') as new_config:
+            self.settings.write(new_config)  
     
     
 # TODO:

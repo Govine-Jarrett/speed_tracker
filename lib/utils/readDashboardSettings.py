@@ -1,5 +1,6 @@
 import sys
 sys.path.append(r'./lib/utils/')
+from encryptionManager import decrypt_password, read_key
 from createDashboardSettings import (settings_exists, create_settings,
                                      ConfigParser, config_file_path)
 
@@ -82,7 +83,12 @@ class ReadDashboardSettings:
         Returns:
             str: The per-define password
         """
-        return self.settings['DEFAULT']['password']
+        store_pwd = self.settings['DEFAULT']['password']
+        if self.get_status():
+            return store_pwd
+        else:
+            return decrypt_password(read_key(), store_pwd)
+        # TODO: need to work on
     
     
     
@@ -105,9 +111,22 @@ class ReadDashboardSettings:
             int: The pre-define server
         """
         return self.settings['DEFAULT']['server']
+    
+    
+    
+    
+    
+    def get_status(self) -> bool:
+        """
+        Get the current status if dashboard is been used for the first time or not.
+        Returns:
+            bool: return true if dashboard is launched for the first time
+        """
+        return self.settings['DEFAULT']['isFirstTime']
+
         
     
     
-    
-    
+
+
     

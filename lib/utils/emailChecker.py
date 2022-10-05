@@ -1,25 +1,17 @@
-from string import ascii_lowercase as letters
-from configparser import ConfigParser
-import logging
-from checkSettings import config_file_path
-
-log_file_path = 'emailChecker.log'
-app_settings = ConfigParser()
-app_settings.read(config_file_path)
-
-email_provider = app_settings['DEFAULT']['emailProvider']
-
+from string import ascii_lowercase as letters 
+from string import  digits 
 
 # TODO:
-# -[] Update to not take the provider arg
+# -[x] Update to not take the provider arg
 
-def email_is_valid(email_to: str, provider: str = email_provider )-> bool:
-    """Check if the email address is valid base on the given provider or default.
-    NOTE:
-    The default provider is gmail.com, this can be changed in the settings file.
+def is_email_valid(email_to: str)-> bool:
     """
-    allowed_chars = [_ for _ in f"{letters}.0123456789"]
-   
+    Check if the email address is valid.
+    """
+    allowed_chars_for_name = [_ for _ in letters+digits+'.']
+    allowed_chars_for_mail_provider = [_ for _ in letters+'.']
+    
+
     # FORMATTING THE INPUT - START
     word = email_to.lower()
     # FORMATTING THE INPUT - END
@@ -38,20 +30,47 @@ def email_is_valid(email_to: str, provider: str = email_provider )-> bool:
         # GETTING THE EMAIL USERS NAME - END
         
         # CHECKING IF THE MAIL PROVIDER IS PROVIDER - START
-        if mail_provider == provider and len(recipients_name) >= 5:
+        
+        # Check if the mail provider dont end with a . period
+        
+        if len(recipients_name) >= 5:
             name = []
             for char in recipients_name:
-                if char not in allowed_chars:
+                if char not in allowed_chars_for_name:
                     name.append(char)
             if len(name) == 0:
-                return True
+                # Storing the illegal chars
+                not_allowed_char = []
+                # Check total @ symbol
+                at_sign_count = mail_provider.count('@')
+
+                
+                # Checking for illegal chars
+                index_count = 0
+                for new_char in mail_provider[1:]:
+                    if new_char not in allowed_chars_for_mail_provider:
+                        not_allowed_char.append(new_char)
+                    index_count += 1
+
+
+                if len(not_allowed_char) == 0:
+                    if at_sign_count == 1  and  not mail_provider[index_count:] == '.':
+                        return True
+                    else:
+                        return False
+                else:
+                    return False
+                
+            
+            
             else:
                 return False
+            
         else:
             return False
         # CHECKING IF THE MAIL PROVIDER IS PROVIDER - END
     
     except ValueError as event:
-        # Log error
-        logging.basicConfig(format='%(message)s %(asctime)s ', filename=log_file_path)
-        logging.warning(str(event))
+        return False
+
+

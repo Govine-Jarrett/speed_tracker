@@ -1,2 +1,5 @@
 *.pyc
 *.lock
+*.key
+res/config
+res/list_of_servers.txt

@@ -1,11 +1,15 @@
 #!/usr/bin/python3
+from string import digits
 import tkinter as tk
 from tkinter import messagebox
 import tkinter.ttk as ttk
+from utils.emailChecker import is_email_valid
 from utils.updateDashboardSettings import UpdateDashboardSettings
 from utils.readDashboardSettings import ReadDashboardSettings
 from utils.emailServers import EmailServers
-
+from utils.encryptionManager import create_key, read_key, encrypt_password, decrypt_password
+from utils.encryptionManager import MASTER_KEY_FILE
+from utils.createDashboardSettings import config_file_path, system
 
 
 
@@ -14,24 +18,15 @@ class DashboardApp:
         # build ui
         self.DashboardToplevel = tk.Tk() if master is None else tk.Toplevel(master)
         
-        load_dashboard_settings = ReadDashboardSettings()
+        self.load_dashboard_settings = ReadDashboardSettings()
         self.update_dashboard_settings = UpdateDashboardSettings()
         secure_servers = EmailServers()
         
+        # Setting the max length for speed entries
+        self.max_char_for_speed = 3
         
         
-        
-        
-        
-
-
-
-
-
-
-
-
-
+   
 
 
 
@@ -119,22 +114,7 @@ class DashboardApp:
         #######################
         
         
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
 
 
         #######################
@@ -146,28 +126,28 @@ class DashboardApp:
         # SPEED SETTINGS
         
         # Upload Speed Entry
-        _upload_ = load_dashboard_settings.get_upload()
+        _upload_ = self.load_dashboard_settings.get_upload()
         self.UploadSpeedEntry["state"] = "normal"
         self.UploadSpeedEntry.delete("0", "end")
         self.UploadSpeedEntry.insert("0", _upload_)
         self.UploadSpeedEntry["state"] = "disabled"
         
         # Download Speed Entry
-        _download_ = load_dashboard_settings.get_download()
+        _download_ = self.load_dashboard_settings.get_download()
         self.DownloadSpeedEntry["state"] = "normal"
         self.DownloadSpeedEntry.delete("0", "end")
         self.DownloadSpeedEntry.insert("0", _download_)
         self.DownloadSpeedEntry["state"] = "disabled"
         
         # Recipient Email Entry
-        _recipient_ = load_dashboard_settings.get_recipient_email()
+        _recipient_ = self.load_dashboard_settings.get_recipient_email()
         self.RecipientEmailEntry["state"] = "normal"
         self.RecipientEmailEntry.delete("0", "end")
         self.RecipientEmailEntry.insert("0", _recipient_)
         self.RecipientEmailEntry["state"] = "disabled"
 
         # Modem Location Entry
-        _location_ = load_dashboard_settings.get_modem_loc()
+        _location_ = self.load_dashboard_settings.get_modem_loc()
         self.ModemLocationEntry["state"] = "normal"
         self.ModemLocationEntry.delete("0", "end")
         self.ModemLocationEntry.insert("0", _location_)
@@ -179,25 +159,38 @@ class DashboardApp:
 
 
         # EMAIL SENDER
-        _sender_ = load_dashboard_settings.get_sender_email()
+        _sender_ = self.load_dashboard_settings.get_sender_email()
         self.EmailSenderEntry["state"] = "normal"
         self.EmailSenderEntry.delete("0", "end")
         self.EmailSenderEntry.insert("0", _sender_)
         self.EmailSenderEntry["state"] = "disabled"      
 
 
+        # # Checking if dashboard is been used for the first time
+        # if not self.load_dashboard_settings.get_status():
+        #     # Un-hiding config folder and file
+        #     system(f'attrib -h {config_file_path}')
+        #     system(f'attrib -h {MASTER_KEY_FILE}')
 
-        _password_ = load_dashboard_settings.get_password()
+        #     # decrypting the password before loading it
+        #     _password_ = str(decrypt_password(read_key(), self.load_dashboard_settings.get_password()))
+            
+        #     # Hiding config folder and file
+        #     system(f'attrib +h {config_file_path}')
+        #     system(f'attrib +h {MASTER_KEY_FILE}')
+            
+            
+        _password_ = self.load_dashboard_settings.get_password()
         self.PasswordEntry["state"] = "normal"
         self.PasswordEntry.delete("0", "end")
         self.PasswordEntry.insert("0", _password_)
         self.PasswordEntry["state"] = "disabled"
 
 
-        _port_ = load_dashboard_settings.get_port()
+        _port_ = self.load_dashboard_settings.get_port()
         self.ServerPortCombobox.set(_port_)
         
-        _server_ = load_dashboard_settings.get_server()
+        _server_ = self.load_dashboard_settings.get_server()
         self.ServerCombobox.set(_server_)
 
 
@@ -238,11 +231,12 @@ class DashboardApp:
         self.DownloadSpeedLabel.configure(text="Download Speed in MB:")
         self.ModemLocationLabel.configure(text="Modem Location:")
         self.RecipientEmailLabel.configure(text="Email Address:")
-        self.UploadSpeedEntry.configure(state="disabled", validate="key")
-        self.UploadSpeedEntry.configure(validatecommand=self.is_speed_valid)
+        
+
+        self.UploadSpeedEntry.configure(state="disabled")
         self.DownloadSpeedEntry.configure(state="disabled")
-        self.ModemLocationEntry.configure(state="disabled")
         self.RecipientEmailEntry.configure(state="disabled")
+        self.ModemLocationEntry.configure(state="disabled")
         
         self.speed_settings_value = tk.BooleanVar()
         self.EditSpeedSettingsCheckbutton.configure(
@@ -263,7 +257,6 @@ class DashboardApp:
         self.PasswordEntry.configure(show="*", state="disabled")
         
         
-        
         _server_port_value = secure_servers.get_ports()
         self.ServerPortLabel.configure(text="Port:")
         self.ServerPortCombobox.configure(
@@ -277,9 +270,9 @@ class DashboardApp:
         )
         
         # Check button for editing sender email
-        self._email_sender_value = tk.BooleanVar()
+        self.email_sender_value = tk.BooleanVar()
         self.EditSenderEmailCheckbutton.configure(
-            cursor="hand2", text="Edit email?", variable=self._email_sender_value,command=self.edit_email_sender
+            cursor="hand2", text="Edit email?", variable=self.email_sender_value,command=self.edit_email_sender
         )
 
         
@@ -377,11 +370,6 @@ class DashboardApp:
 
 
 
-    def is_speed_valid(self):
-        pass
-
-
-
 
     def edit_speed_settings(self):
         """
@@ -414,17 +402,10 @@ class DashboardApp:
             self.ModemLocationEntry.configure(state='disable')
             
             # Check if the button is enabled
-            if not self._email_sender_value.get():
+            if not self.email_sender_value.get():
                 # Disabling the save button 
                 self.SaveBtn.configure(state='disable', cursor='arrow')
                 
-
-
-
-
-    def is_email_valid(self):
-        pass
-
 
 
 
@@ -435,20 +416,19 @@ class DashboardApp:
         
         Otherwise disable them.
         """
-        if self._email_sender_value.get():
+        if self.email_sender_value.get():
             # Enabling the Email  and Password entry
             self.EmailSenderEntry.configure(state='normal')
             self.PasswordEntry.configure(state='normal')
             # Show the password
             self.PasswordEntry.configure(show='')
             
-            # Check if the button is enabled
-            if not self.speed_settings_value.get():
-                # Enabling the save button and Combobox
-                self.SaveBtn.configure(state='normal', cursor='hand2')
-        
-                self.ServerPortCombobox.configure(state='normal', cursor='hand2')
-                self.ServerCombobox.configure(state='normal', cursor='hand2')
+
+            # Enabling the save button and Combobox
+            self.SaveBtn.configure(state='normal', cursor='hand2')
+    
+            self.ServerPortCombobox.configure(state='normal', cursor='hand2')
+            self.ServerCombobox.configure(state='normal', cursor='hand2')
                 
  
         else:
@@ -458,13 +438,97 @@ class DashboardApp:
             # Hide the password
             self.PasswordEntry.configure(show='*')
             
-            # Check if the button is enabled
-            if not self.speed_settings_value.get():
-                # Disabling the save button 
-                self.SaveBtn.configure(state='disable', cursor='arrow')
-                self.ServerPortCombobox.configure(state='disable', cursor='arrow')
-                self.ServerCombobox.configure(state='disable', cursor='arrow')
 
+            # Disabling the save button 
+            self.SaveBtn.configure(state='disable', cursor='arrow')
+            self.ServerPortCombobox.configure(state='disable', cursor='arrow')
+            self.ServerCombobox.configure(state='disable', cursor='arrow')
+
+
+
+
+
+    def is_speed_valid(self) -> bool:
+            """
+            Check if the entries are valid for the speed settings,
+            and also check if all entries for both settings contains data. 
+
+            Returns:
+                bool: returns true if all conditions are met, else false.
+            """
+            
+            upload_speed = self.UploadSpeedEntry.get()
+            download_speed = self.DownloadSpeedEntry.get()
+            recipient = self.RecipientEmailEntry.get()
+            modem_loc = self.ModemLocationEntry.get()
+            sender = self.EmailSenderEntry.get()
+            sender_pwd = self.PasswordEntry.get()
+            port = self.ServerPortCombobox.get()
+            server_port = self.ServerCombobox.get()
+            
+            
+            all_entries = [upload_speed, 
+                           download_speed,
+                           recipient, 
+                           modem_loc, 
+                           sender,sender_pwd,
+                           port, server_port] 
+            
+            # Checking if all entries contains data
+            have_data = True
+            for entry in all_entries:
+                if len(entry) == 0:
+                    have_data = False
+            if not have_data:
+                messagebox.showwarning('Empty entry', 'Please fill in all the entries.')            
+                return False
+        
+            # Check if both speed entries contains letters
+            letter_is_in = False
+            for char in upload_speed + download_speed:
+                if char not in digits:
+                    letter_is_in = True
+            
+            if letter_is_in:
+                messagebox.showwarning('Digits only','Both speeds should only contain digits.')
+                return False
+            
+            if len(upload_speed) > self.max_char_for_speed or len(download_speed) > self.max_char_for_speed:
+                messagebox.showwarning('Max length','The speed should contain no more than 3 digits.')
+                return False
+            # else
+            return True 
+
+
+    
+    
+    def is_both_email_valid(self) -> bool:
+        """
+        Check if both recipient and sender email is valid.
+
+        Returns:
+            bool: if both are valid return true else false
+        """
+        
+        both_valid = True 
+        
+        sender = self.EmailSenderEntry.get()
+        recipient = self.RecipientEmailEntry.get()
+        
+        # Checking the recipient email
+        if not is_email_valid(recipient):
+            messagebox.showwarning('Recipient Email','Please use a valid email address.')
+            return False
+        
+        # Checking the senders email
+        if not is_email_valid(sender):
+            messagebox.showwarning('Email Sender','Please use a valid email address along\nwith the appropriate port and server.')
+            return False
+            
+            
+        if both_valid:
+            return True
+    
 
 
 
@@ -472,16 +536,69 @@ class DashboardApp:
         """
         Save the data from each entry
         """
-        # This is a test
-        self.update_dashboard_settings.set_upload(self.UploadSpeedEntry.get())
-        self.update_dashboard_settings.set_download(self.DownloadSpeedEntry.get())
-        self.update_dashboard_settings.set_recipient_email(self.RecipientEmailEntry.get())
-        self.update_dashboard_settings.set_modem_loc(self.ModemLocationEntry.get())
-        self.update_dashboard_settings.set_sender_email(self.EmailSenderEntry.get())
-        self.update_dashboard_settings.set_password(self.PasswordEntry.get())
-        self.update_dashboard_settings.set_port(self.ServerPortCombobox.get())
-        self.update_dashboard_settings.set_server(self.ServerCombobox.get())
-        # pass
+        # Getting both email to check if they are valid
+       
+        if self.is_speed_valid() and self.is_both_email_valid():
+                # Unhide config file and folder
+                system(f'attrib -h {config_file_path}')
+                system(f'attrib -h {MASTER_KEY_FILE}')
+                # Uncheck combobox
+                if self.email_sender_value:
+                    self.email_sender_value.set(False)
+                    # Disable entries for the Email sender settings
+                    self.EmailSenderEntry.configure(state="disabled")
+                    self.PasswordEntry.configure(show="*", state="disabled")
+                    self.ServerPortCombobox.configure(state="disabled")
+                    self.ServerCombobox.configure(state="disabled")
+                    # Then saving the data
+                    self.update_dashboard_settings.set_sender_email(self.EmailSenderEntry.get())
+                    self.update_dashboard_settings.set_port(self.ServerPortCombobox.get())
+                    self.update_dashboard_settings.set_server(self.ServerCombobox.get())
+                    
+                    
+                    # Checking if dashboard is been used for the first time
+                    if self.load_dashboard_settings.get_status():
+                        # create a new encryption key
+                        create_key()
+                        # update the status
+                        self.update_dashboard_settings.set_status()
+                    # Encrypting the password before storing
+                    secure_pwd = str(encrypt_password(read_key(), self.PasswordEntry.get()))
+                    self.update_dashboard_settings.set_password(secure_pwd)
+                    
+                    
+                    # Disabling the save button
+                    if not self.speed_settings_value:
+                        self.SaveBtn.configure(state='disable', cursor='arrow')
+                        
+                    
+                    
+                if self.speed_settings_value:
+                    # Uncheck combobox
+                    self.speed_settings_value.set(False)
+                    # Disable entries for the Email sender settings
+                    self.UploadSpeedEntry.configure(state="disabled")
+                    self.DownloadSpeedEntry.configure(state="disabled")
+                    self.RecipientEmailEntry.configure(state="disabled")            
+                    self.ModemLocationEntry.configure(state="disabled")
+                    # Then saving the data
+                    self.update_dashboard_settings.set_upload(self.UploadSpeedEntry.get())
+                    self.update_dashboard_settings.set_download(self.DownloadSpeedEntry.get())
+                    self.update_dashboard_settings.set_recipient_email(self.RecipientEmailEntry.get())
+                    self.update_dashboard_settings.set_modem_loc(self.ModemLocationEntry.get())
+                    # Disabling the save button
+                    if not self.email_sender_value:
+                        self.SaveBtn.configure(state='disable', cursor='arrow')
+                    
+                    # Hiding config folder and file
+                    system(f'attrib +h {config_file_path}')
+                    system(f'attrib +h {MASTER_KEY_FILE}')
+                    
+                messagebox.showinfo('Settings Saved', 'The new settings was saved successfully.')
+                
+                # Load in the newly stored data
+            
+            
 
 
 
@@ -501,12 +618,13 @@ if __name__ == "__main__":
 
 
 # TODO:
-# -[] Validate the data before saving.
-# -[] disable all entries after the data was update.
-# -[] Show a pop dialog that the entries was save.
-# -[] Encrypt the password before saving to config.
+# -[x] Validate the data before saving.
+# -[x] disable all entries after the data was update.
+# -[x] Show a pop dialog that the entries was save.
+# -[x] Encrypt the password before saving to config.
+# -[] Check if the app is been used for the first time then load in the un encrypted password.
 
 
 # BUG:
-# -[] if the speed settings check button is marked tick and i try to also tick the sender email check button
+# -[x] if the speed settings check button is marked tick and i try to also tick the sender email check button
 # all entires will be set to normal expect for the comboboxes.
