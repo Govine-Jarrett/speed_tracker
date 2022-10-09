@@ -1,4 +1,4 @@
-from os import system
+from os import path, system
 from cryptography.fernet import Fernet
 
 
@@ -28,6 +28,10 @@ def read_key() -> bytes:
     Returns:
         bytes: The key.
     """
+    # # check if path exists
+    # if not path.exists(MASTER_KEY_FILE):
+    #     create_key()
+        
     with open(MASTER_KEY_FILE, 'rb') as file:
         key = file.read()
     return key

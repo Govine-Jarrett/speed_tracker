@@ -1,6 +1,6 @@
 import sys
 sys.path.append(r'./lib/utils/')
-from encryptionManager import decrypt_password, read_key
+from encryptionManager import decrypt_password, read_key, encrypt_password
 from createDashboardSettings import (settings_exists, create_settings,
                                      ConfigParser, config_file_path)
 
@@ -84,10 +84,13 @@ class ReadDashboardSettings:
             str: The per-define password
         """
         store_pwd = self.settings['DEFAULT']['password']
-        if self.get_status():
-            return store_pwd
-        else:
+        # is_first = self.get_status()
+        is_first = True
+        if not is_first:
             return decrypt_password(read_key(), store_pwd)
+        else:
+            return  store_pwd
+
         # TODO: need to work on
     
     
@@ -130,3 +133,18 @@ class ReadDashboardSettings:
 
 
     
+# encrypted_password = ReadDashboardSettings()
+# a = encrypted_password.get_password()
+# print(type(a))
+
+
+# password = decrypt_password(read_key(), a)
+# print(password)
+# encrypted_password = b'gAAAAABjPb5tkubFc5MLOPB4uvPRClhHDNU6zNXvKTV2g4LS2dlZN2zjR68cWUcaHvyhkzM1Wc5hNl5hlIChTIZSueeVT3HGjA=='
+# print(f'ENCRYPTED: {encrypted_password}')
+
+
+# decrypted_password = a
+# print(f'DECRYPTED: {decrypt_password(read_key(), decrypted_password)}')
+# BUG
+# [] issues decrypting the password

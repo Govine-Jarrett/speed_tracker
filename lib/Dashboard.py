@@ -7,9 +7,10 @@ from utils.emailChecker import is_email_valid
 from utils.updateDashboardSettings import UpdateDashboardSettings
 from utils.readDashboardSettings import ReadDashboardSettings
 from utils.emailServers import EmailServers
-from utils.encryptionManager import create_key, read_key, encrypt_password, decrypt_password
-from utils.encryptionManager import MASTER_KEY_FILE
+# from utils.encryptionManager import create_key, read_key, encrypt_password, decrypt_password
+# from utils.encryptionManager import MASTER_KEY_FILE
 from utils.createDashboardSettings import config_file_path, system
+
 
 
 
@@ -166,19 +167,7 @@ class DashboardApp:
         self.EmailSenderEntry["state"] = "disabled"      
 
 
-        # # Checking if dashboard is been used for the first time
-        # if not self.load_dashboard_settings.get_status():
-        #     # Un-hiding config folder and file
-        #     system(f'attrib -h {config_file_path}')
-        #     system(f'attrib -h {MASTER_KEY_FILE}')
 
-        #     # decrypting the password before loading it
-        #     _password_ = str(decrypt_password(read_key(), self.load_dashboard_settings.get_password()))
-            
-        #     # Hiding config folder and file
-        #     system(f'attrib +h {config_file_path}')
-        #     system(f'attrib +h {MASTER_KEY_FILE}')
-            
             
         _password_ = self.load_dashboard_settings.get_password()
         self.PasswordEntry["state"] = "normal"
@@ -541,7 +530,7 @@ class DashboardApp:
         if self.is_speed_valid() and self.is_both_email_valid():
                 # Unhide config file and folder
                 system(f'attrib -h {config_file_path}')
-                system(f'attrib -h {MASTER_KEY_FILE}')
+                # system(f'attrib -h {MASTER_KEY_FILE}')
                 # Uncheck combobox
                 if self.email_sender_value:
                     self.email_sender_value.set(False)
@@ -557,14 +546,19 @@ class DashboardApp:
                     
                     
                     # Checking if dashboard is been used for the first time
-                    if self.load_dashboard_settings.get_status():
-                        # create a new encryption key
-                        create_key()
-                        # update the status
-                        self.update_dashboard_settings.set_status()
-                    # Encrypting the password before storing
-                    secure_pwd = str(encrypt_password(read_key(), self.PasswordEntry.get()))
-                    self.update_dashboard_settings.set_password(secure_pwd)
+                    # first_time = self.load_dashboard_settings.get_status()
+                    # if first_time:
+                    #     # create a new encryption key
+                    #     create_key()
+                    #     print('First time using app')
+                    #     # update the status
+                    #     self.update_dashboard_settings.set_status()
+                    # # Encrypting the password before storing
+                    # secure_pwd = str(encrypt_password(read_key(), self.PasswordEntry.get()))
+                    # self.update_dashboard_settings.set_password(secure_pwd)
+                    
+                    new_pwd =  self.PasswordEntry.get()
+                    self.update_dashboard_settings.set_password(new_pwd)
                     
                     
                     # Disabling the save button
@@ -590,15 +584,24 @@ class DashboardApp:
                     if not self.email_sender_value:
                         self.SaveBtn.configure(state='disable', cursor='arrow')
                     
-                    # Hiding config folder and file
-                    system(f'attrib +h {config_file_path}')
-                    system(f'attrib +h {MASTER_KEY_FILE}')
-                    
                 messagebox.showinfo('Settings Saved', 'The new settings was saved successfully.')
                 
                 # Load in the newly stored data
             
-            
+                # get_new_pwd = self.load_dashboard_settings
+                # _password_ = get_new_pwd.get_password()
+                # # pwd = decrypt_password(read_key(), _password_)
+                # self.PasswordEntry["state"] = "normal"
+                # self.PasswordEntry.delete("0", "end")
+                # self.PasswordEntry.insert("0", _password_)
+                # self.PasswordEntry["state"] = "disabled"
+
+                # Hiding config folder and file
+                system(f'attrib +h {config_file_path}')
+                # system(f'attrib +h {MASTER_KEY_FILE}')
+                    
+
+
 
 
 
@@ -621,10 +624,13 @@ if __name__ == "__main__":
 # -[x] Validate the data before saving.
 # -[x] disable all entries after the data was update.
 # -[x] Show a pop dialog that the entries was save.
+# -[x] Hide the config file and folder.
 # -[x] Encrypt the password before saving to config.
-# -[] Check if the app is been used for the first time then load in the un encrypted password.
+# -[x] Check if the app is been used for the first time then load in the un encrypted password.
+# -[V] Remove feature to Encrypt the password before saving to config.
+# -[] Insert the newly stored data into the entry.
 
 
 # BUG:
 # -[x] if the speed settings check button is marked tick and i try to also tick the sender email check button
-# all entires will be set to normal expect for the comboboxes.
+# -[x] fix File not found - ./res/config/master.key
