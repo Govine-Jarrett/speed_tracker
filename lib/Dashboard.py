@@ -372,6 +372,7 @@ class DashboardApp:
             
             # Enabling the save button 
             self.SaveBtn.configure(state='normal', cursor='hand2')
+
         
             # Enabling the Upload and download entry  
             self.UploadSpeedEntry.configure(state='normal')
@@ -406,6 +407,8 @@ class DashboardApp:
         Otherwise disable them.
         """
         if self.email_sender_value.get():
+            
+            
             # Enabling the Email  and Password entry
             self.EmailSenderEntry.configure(state='normal')
             self.PasswordEntry.configure(state='normal')
@@ -428,11 +431,14 @@ class DashboardApp:
             self.PasswordEntry.configure(show='*')
             
 
-            # Disabling the save button 
-            self.SaveBtn.configure(state='disable', cursor='arrow')
+            # Disabling the server and server port combobox 
             self.ServerPortCombobox.configure(state='disable', cursor='arrow')
             self.ServerCombobox.configure(state='disable', cursor='arrow')
 
+            # Check if the button is enabled
+            if not self.speed_settings_value.get():
+                # Disabling the save button 
+                self.SaveBtn.configure(state='disable', cursor='arrow')
 
 
 
@@ -517,7 +523,21 @@ class DashboardApp:
             
         if both_valid:
             return True
+  
     
+
+
+    def is_data_new(self) -> bool:
+        """
+        Compare the new data with the old to
+        determine if the data is new then
+        update the isFirstTime status to False
+        Returns:
+            bool: _description_
+        """
+        # TODO: Implement feature asap
+        pass
+
 
 
 
@@ -528,11 +548,19 @@ class DashboardApp:
         # Getting both email to check if they are valid
        
         if self.is_speed_valid() and self.is_both_email_valid():
+            
                 # Unhide config file and folder
                 system(f'attrib -h {config_file_path}')
                 # system(f'attrib -h {MASTER_KEY_FILE}')
+                
+                
+                # TODO: Once the data is new set the status to false
+                # ONCE THE DATA IS NEW SET THE STATUS TO FALSE
+                self.update_dashboard_settings.set_status()
+                
+                
                 # Uncheck combobox
-                if self.email_sender_value:
+                if self.email_sender_value.get():
                     self.email_sender_value.set(False)
                     # Disable entries for the Email sender settings
                     self.EmailSenderEntry.configure(state="disabled")
@@ -561,13 +589,10 @@ class DashboardApp:
                     self.update_dashboard_settings.set_password(new_pwd)
                     
                     
-                    # Disabling the save button
-                    if not self.speed_settings_value:
-                        self.SaveBtn.configure(state='disable', cursor='arrow')
                         
                     
                     
-                if self.speed_settings_value:
+                if self.speed_settings_value.get():
                     # Uncheck combobox
                     self.speed_settings_value.set(False)
                     # Disable entries for the Email sender settings
@@ -580,21 +605,15 @@ class DashboardApp:
                     self.update_dashboard_settings.set_download(self.DownloadSpeedEntry.get())
                     self.update_dashboard_settings.set_recipient_email(self.RecipientEmailEntry.get())
                     self.update_dashboard_settings.set_modem_loc(self.ModemLocationEntry.get())
-                    # Disabling the save button
-                    if not self.email_sender_value:
-                        self.SaveBtn.configure(state='disable', cursor='arrow')
+
                     
+                # Disabling the save button
+                self.SaveBtn.configure(state='disable', cursor='arrow')
+                
+                # Notify the user that the data was updated
                 messagebox.showinfo('Settings Saved', 'The new settings was saved successfully.')
                 
-                # Load in the newly stored data
-            
-                # get_new_pwd = self.load_dashboard_settings
-                # _password_ = get_new_pwd.get_password()
-                # # pwd = decrypt_password(read_key(), _password_)
-                # self.PasswordEntry["state"] = "normal"
-                # self.PasswordEntry.delete("0", "end")
-                # self.PasswordEntry.insert("0", _password_)
-                # self.PasswordEntry["state"] = "disabled"
+
 
                 # Hiding config folder and file
                 system(f'attrib +h {config_file_path}')
@@ -621,6 +640,10 @@ if __name__ == "__main__":
 
 
 # TODO:
+# -[] Before saving the data ensure the data is different from the default data.
+# -[] Add a button to clear all entires base ob thr checkbox.
+# -[] Add a button to rest the config file to the default data.
+# -[?] Insert the newly stored data into the entry.
 # -[x] Validate the data before saving.
 # -[x] disable all entries after the data was update.
 # -[x] Show a pop dialog that the entries was save.
@@ -628,7 +651,6 @@ if __name__ == "__main__":
 # -[x] Encrypt the password before saving to config.
 # -[x] Check if the app is been used for the first time then load in the un encrypted password.
 # -[V] Remove feature to Encrypt the password before saving to config.
-# -[] Insert the newly stored data into the entry.
 
 
 # BUG:

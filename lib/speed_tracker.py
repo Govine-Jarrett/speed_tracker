@@ -1,42 +1,45 @@
+#!/usr/bin/python3
+# 10/9/2022
 # 7/2/2022
-# Check your network speed and notify you via email if the network upload and download speeds are below the predefined speeds in the 'speedTracker.ini' file.
+# Check your network speed and notify you via email if the network upload and download speeds are below the pre-defined speeds from the dashboard.
 
-from configparser import ConfigParser
-from time import sleep
+from tkinter import messagebox
 import speedtest
-from STTools import (environ_var_exists, send_email,
-                     settings_exists, create_settings,
-                     email_is_valid, convert_bytes)
+from utils.readDashboardSettings import ReadDashboardSettings
+from utils.convertBytes import convert_bytes
 
-# Speed test
-st = speedtest.Speedtest()
 
-servers = []
-# If you want to test against a specific server
-# servers = [1234]
-
-threads = None
-# If you want to use a single threaded test
-# threads = 1
+# Load dashboard settings
+dashboard_settings = ReadDashboardSettings() 
+s = speedtest.Speedtest()
 
 
 
 
-while True:
-    config_file_path = 'setting/speedTracker.ini'
-    app_settings = ConfigParser()
-    app_settings.read(config_file_path)
+upload_speed = dashboard_settings.get_upload()
+download_speed = dashboard_settings.get_download()
+recipient = dashboard_settings.get_recipient_email()
+modem_loc = dashboard_settings.get_modem_loc()
+sender = dashboard_settings.get_sender_email()
+sender_pwd = dashboard_settings.get_password()
+port = dashboard_settings.get_port()
+server_port = dashboard_settings.get_server()
 
-    if environ_var_exists() and settings_exists():
-        email_provider = app_settings['DEFAULT']['emailProvider']
-        min_ds = app_settings['DEFAULT']['minDownloadSpeed']
-        min_us = app_settings['DEFAULT']['minUploadSpeed']
-        receiver_email = app_settings['DEFAULT']['receiverEmail']
-        modem_loc = app_settings['DEFAULT']['modemLocation']
-        print('PASS: evn and settings test')
-        
 
-        s = speedtest.Speedtest()
+
+# Check if app is been used for the first time.
+isFirst = dashboard_settings.get_status()
+if isFirst == True:
+    messagebox.showwarning('CONFIGURE DASHBOARD','Please launch the dashboard app to configure the speed tracker.')
+
+else:
+# Start the process of tracking the network speed
+    upload_speeds = []
+    for _ in range(0,5):
+        # Speed test
+        servers = []
+        threads = 1
+
         s.get_servers(servers)
         s.get_best_server()
         s.download(threads=threads)
@@ -44,27 +47,107 @@ while True:
         s.results.share()
         results_dict = s.results.dict()
         
-        ds = convert_bytes(results_dict.get('download'))
-        us = convert_bytes(results_dict.get('upload'))
-        ping = results_dict.get('ping')
-        link = results_dict.get('share')
+    
+    
+    
+    
+    
+    
+    # VIEWING THE DATA FROM RESULT
+        upload_speeds.append(results_dict.get('upload'))
         
-        # print('PASS: speed test')
+    # ds = convert_bytes(results_dict.get('download'))
+    # ping = results_dict.get('ping')
+    # link = results_dict.get('share')
+    
+    # test_results = [us, ds, ping, link]
+    # for result in test_results:
+    #     print(result, end='\n')
+    
+    # Averaging the speed
+    total = 0
+    for speed in upload_speeds:
+        total += speed
+        print(f'Speed: {speed}', end='\n')
         
-        if email_is_valid(receiver_email, email_provider):
-            send_email(us, ds, ping, link, receiver_email, modem_loc)
-            # print('PASS: validate  and send email test')
-            break
-        else:
-            # print('PASS: email is not valid test')
-            # print('Go to setting and change the receiver email.')
-            break
-    else:
-        create_settings()      
-        # print('PASS: create settings test')
+    average = total/len(upload_speeds)
+    us = convert_bytes(average)
+    print(f'Average speed: {us}')
+
+# Check if the speed is below the pre-define limits
+    # Send the report to recipient's email
+    
+# Keep track of the speed and when it was logged.
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+# # If you want to test against a specific server
+# # servers = [1234]
+
+# threads = None
+# # If you want to use a single threaded test
+# # threads = 1
+
+
+# while True:
+#     config_file_path = 'setting/speedTracker.ini'
+#     app_settings = ConfigParser()
+#     app_settings.read(config_file_path)
+
+#     if environ_var_exists() and settings_exists():
+#         email_provider = app_settings['DEFAULT']['emailProvider']
+#         min_ds = app_settings['DEFAULT']['minDownloadSpeed']
+#         min_us = app_settings['DEFAULT']['minUploadSpeed']
+#         receiver_email = app_settings['DEFAULT']['receiverEmail']
+#         modem_loc = app_settings['DEFAULT']['modemLocation']
+#         print('PASS: evn and settings test')
+        
+
+#         s = speedtest.Speedtest()
+#         s.get_servers(servers)
+#         s.get_best_server()
+#         s.download(threads=threads)
+#         s.upload(threads=threads)
+#         s.results.share()
+#         results_dict = s.results.dict()
+        
+#         ds = convert_bytes(results_dict.get('download'))
+#         us = convert_bytes(results_dict.get('upload'))
+#         ping = results_dict.get('ping')
+#         link = results_dict.get('share')
+        
+#         # print('PASS: speed test')
+        
+#         if email_is_valid(receiver_email, email_provider):
+#             send_email(us, ds, ping, link, receiver_email, modem_loc)
+#             # print('PASS: validate  and send email test')
+#             break
+#         else:
+#             # print('PASS: email is not valid test')
+#             # print('Go to setting and change the receiver email.')
+#             break
+#     else:
+#         create_settings()      
+#         # print('PASS: create settings test')
+
+
+# TODO:
+# -[] Link to the dashboard
+# -[] Run the speedtest several time and find the average speed.
+# -[] Log each time the test is run
 
 
 
