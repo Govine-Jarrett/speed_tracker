@@ -32,8 +32,8 @@ def create_settings() -> None:
     # Create section and settings
     # Both speeds are in MB
     config['DEFAULT'] = {
-        'minUploadSpeed': '150',
-        'minDownloadSpeed': '150',
+        'minUploadSpeed': '75',
+        'minDownloadSpeed': '75',
         'recipientEmail': 'example@domin.com',
         'modemLocation': 'Home Office',
         'senderEmail':'speed.tracker@gmail.com',

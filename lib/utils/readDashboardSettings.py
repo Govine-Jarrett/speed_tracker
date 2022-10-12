@@ -23,7 +23,7 @@ class ReadDashboardSettings:
         Returns:
             int: The pre-define speed in MB
         """
-        return self.settings['DEFAULT']['minUploadSpeed']
+        return int(self.settings['DEFAULT']['minUploadSpeed'])
     
     
     
@@ -34,7 +34,7 @@ class ReadDashboardSettings:
         Returns:
             int: The pre-define speed in MB
         """
-        return self.settings['DEFAULT']['minDownloadSpeed']
+        return int(self.settings['DEFAULT']['minDownloadSpeed'])
     
     
     
@@ -102,16 +102,16 @@ class ReadDashboardSettings:
         Returns:
             int: The pre-define port
         """
-        return self.settings['DEFAULT']['port']
+        return int(self.settings['DEFAULT']['port'])
     
     
     
-    def get_server(self) -> int:
+    def get_server(self) -> str:
         """
         get a pre-define SMTP server from the config file.
         
         Returns:
-            int: The pre-define server
+            str: The pre-define server
         """
         return self.settings['DEFAULT']['server']
     
@@ -125,7 +125,11 @@ class ReadDashboardSettings:
         Returns:
             bool: return true if dashboard is launched for the first time
         """
-        return self.settings['DEFAULT']['isFirstTime']
+        is_first = self.settings['DEFAULT']['isFirstTime']
+        if is_first == 'True':
+            return True
+        # Else
+        return False
 
         
     

@@ -11,7 +11,6 @@ from utils.convertBytes import convert_bytes
 
 # Load dashboard settings
 dashboard_settings = ReadDashboardSettings() 
-s = speedtest.Speedtest()
 
 
 
@@ -28,57 +27,71 @@ server_port = dashboard_settings.get_server()
 
 
 # Check if app is been used for the first time.
-isFirst = dashboard_settings.get_status()
-if isFirst == True:
-    messagebox.showwarning('CONFIGURE DASHBOARD','Please launch the dashboard app to configure the speed tracker.')
-
-else:
-# Start the process of tracking the network speed
-    upload_speeds = []
-    for _ in range(0,5):
-        # Speed test
-        servers = []
+is_first = dashboard_settings.get_status()
+if not is_first:
+    # Start the process of tracking the network speed
+    try:
+        # THE BEST RESULTS
+        s = speedtest.Speedtest()
+        
+        # USE TO DECIDE IF THE EMAIL SHOULD BE SENT
+        is_best_results = True
+            
+            
+    except Exception as error:
+        # THIS WILL NOT GIVE THE BEST RESULTS BECAUSE WE ARE USING HTTPS
+        s = speedtest.Speedtest(secure=True)
+        
+        is_best_results = False
+        # FOR TESTING
+        messagebox.showerror('SPEED TRACKER', error)
+    
+    finally:
+        
         threads = 1
-
-        s.get_servers(servers)
+        s.get_servers()
         s.get_best_server()
         s.download(threads=threads)
         s.upload(threads=threads)
         s.results.share()
         results_dict = s.results.dict()
         
-    
-    
-    
-    
-    
-    
-    # VIEWING THE DATA FROM RESULT
-        upload_speeds.append(results_dict.get('upload'))
         
-    # ds = convert_bytes(results_dict.get('download'))
-    # ping = results_dict.get('ping')
-    # link = results_dict.get('share')
-    
-    # test_results = [us, ds, ping, link]
-    # for result in test_results:
-    #     print(result, end='\n')
-    
-    # Averaging the speed
-    total = 0
-    for speed in upload_speeds:
-        total += speed
-        print(f'Speed: {speed}', end='\n')
         
-    average = total/len(upload_speeds)
-    us = convert_bytes(average)
-    print(f'Average speed: {us}')
+        
+        
+        
+        
+        # VIEWING THE DATA FROM RESULT
+            
+        us = convert_bytes(results_dict.get('upload'))
+        ds = convert_bytes(results_dict.get('download'))
+        ping = results_dict.get('ping')
+        link = results_dict.get('share')
+        
+        test_results = [us, ds, ping, link]
+        for result in test_results:
+            print(result, end='\n')
+        
+        # Record the previous speed results in to a excel file
+        # TODO: [] Write a function to create the excel file and a folder 
+        # TODO: [] Write a function to store the new results in the create file 
+       
+        # Check if the speed is below the pre-define limits
+            #TODO: [] Send the report to recipient's email   
+            # Sending email
+            if is_best_results:
+                pass 
 
-# Check if the speed is below the pre-define limits
-    # Send the report to recipient's email
-    
-# Keep track of the speed and when it was logged.
+        # Keep track of the speed and when it was logged.
 
+
+
+
+
+
+else:
+    messagebox.showwarning('Speed Tracker','Please launch the dashboard app to configure the speed tracker.')
 
 
 
