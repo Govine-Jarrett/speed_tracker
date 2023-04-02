@@ -183,3 +183,80 @@ else:
 
 
 sample_data = {'download': 149760887.81690148, 'upload': 131314054.91164869, 'ping': 2.901, 'server': {'url': 'http://speedtest1.flowjamaica.com:8080/speedtest/upload.php', 'lat': '17.9683', 'lon': '-76.7827', 'name': 'Kingston', 'country': 'Jamaica', 'cc': 'JM', 'sponsor': 'FLOW Jamaica', 'id': '14260', 'host': 'speedtest1.flowjamaica.com:8080', 'd': 3.707838307522677, 'latency': 2.901}, 'timestamp': '2022-07-02T23:11:45.745337Z', 'bytes_sent': 151519232, 'bytes_received': 190362476, 'share': 'http://www.speedtest.net/result/13359052207.png', 'client': {'ip': '216.10.217.245', 'lat': '17.9962', 'lon': '-76.8019', 'isp': 'Flow', 'isprating': '3.7', 'rating': '0', 'ispdlavg': '0', 'ispulavg': '0', 'loggedin': '0', 'country': 'JM'}}
+
+
+"""
+import subprocess
+import tkinter as tk
+from tkinter import filedialog, messagebox
+from datetime import datetime, timedelta
+
+# function to handle scheduling the task
+def schedule_task():
+    # get the task name and program path from the text fields
+    task_name = task_entry.get()
+    program_path = program_entry.get()
+    start_time = start_time_entry.get()
+
+    # check if the task already exists
+    result = subprocess.run(["schtasks", "/query", "/tn", task_name], capture_output=True)
+    if "Ready" in result.stdout.decode():
+        # if the task is already active, ask the user if they want to change the time or cancel the task
+        message_box_result = messagebox.askquestion("Task Already Exists", f"The task '{task_name}' is already scheduled. Do you want to change the start time?", icon='warning')
+        if message_box_result == 'yes':
+            # if the user wants to change the time, delete the existing task and schedule a new one
+            subprocess.run(["schtasks", "/delete", "/tn", task_name, "/f"])
+        else:
+            # if the user does not want to change the time, do not schedule the task
+            return
+
+    # calculate the start time of the task
+    try:
+        start_time_dt = datetime.strptime(start_time, "%Y-%m-%d %H:%M:%S")
+    except ValueError:
+        messagebox.showerror("Invalid Start Time", "Please enter a valid start time in the format 'YYYY-MM-DD HH:MM:SS'.")
+        return
+
+    now = datetime.now()
+    if start_time_dt <= now:
+        messagebox.showerror("Invalid Start Time", "Please enter a start time that is in the future.")
+        return
+
+    time_diff = start_time_dt - now
+    start_delay = f"{time_diff.seconds // 60}M"
+
+    # run the schtasks command to schedule the task
+    try:
+        subprocess.run(["schtasks", "/create", "/tn", task_name, "/tr", program_path, "/sc", "once", "/st", start_time, "/sd", start_time, "/ru", "System", "/it", "/f"])
+        messagebox.showinfo("Task Scheduled", f"The task '{task_name}' has been scheduled to start at {start_time}.")
+    except subprocess.CalledProcessError as e:
+        messagebox.showerror("Error Scheduling Task", f"An error occurred while scheduling the task: {e.stderr.decode()}")
+
+# function to open a file dialog to select a program
+def select_program():
+    # show the file dialog and get the path of the selected file
+    program_path = filedialog.askopenfilename()
+
+    # set the text of the program entry field to the selected program path
+    program_entry.delete(0, tk.END)
+    program_entry.insert(0, program_path)
+
+# create the GUI
+root = tk.Tk()
+
+# create the task label and entry field
+task_label = tk.Label(root, text="Task Name:")
+task_entry = tk.Entry(root)
+task_label.pack()
+task_entry.pack()
+
+# create the program label, entry field, and button to select a program
+program_label = tk.Label(root, text="Program Path:")
+program_entry = tk.Entry(root)
+program_button = tk.Button(root, text="Select Program", command=select_program)
+program_label.pack()
+program_entry.pack()
+program_button.pack()
+
+"""
+
